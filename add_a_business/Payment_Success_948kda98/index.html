@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+	<title>Social Impact App</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="../css/themes/SI_Theme.min.css" />
+	<link rel="stylesheet" href="../css/jqm/jquery.mobile-1.2.0.min.css"/>
+	<link rel="stylesheet" href="../css/SI.css"/>
+
+	<!-- App Version -->
+	<script>
+		var appVersion= 'v0.0.14';
+	</script>
+
+	<!-- JQM Scripts -->
+	<script src="../js/jquery/jquery.1.8.3.min.js"></script>
+	<script src="../js/jquery/jquery.mobile-1.2.0.min.js"></script>
+	
+
+	<!-- Parse Script -->
+	<script src='../js/Parse/parse-1.1.14.min.js'></script>
+
+	
+	<!-- My Script -->
+
+
+
+</head> 
+<body> 
+
+
+
+<!-- _______________________________#SE_PaymentSuccess_Page ________________________________-->
+<div data-role="page" id="SE_PaymentSuccess_Page" data-theme='g'> 
+	<div data-role="header"  id='SE_Login_header'>
+		<a href='http://socialimpactapp.com/' data-icon='arrow-l' id='businessListPage_Back'>Home</a>
+		<h1>Social Impact App</h1>
+	</div>
+
+	<div data-role="content" id='indexPageContent' data-theme='g'>
+
+		<h2>Payment Received.</h2>
+		<h4>Thank you for your contribution and for listing your social enterprise on Social Impact App. If you have any questions, please contact <a href='mailto:rolfe@socialimpactapp.com' target='_blank'>rolfe@socialimpactapp.com</a></h4>
+
+		<img src='../SI Logo.png' id='successSILogo' onclick='goToSI()' style='cursor: hand; cursor: pointer;'>
+		
+	</div>
+</div>
+<!--________________________________ /SE_PaymentSuccess_Page __________________________-->
+
+
+<script>
+	$(document).on('pageshow', '#SE_PaymentSuccess_Page', function(e)
+	{
+		Parse.initialize("Pb8MFFgzdpyNeKUuRiekCDrDD9ele3wyU603Ik9s", "AgYzrVA0QXaqXcWYfmmxGgTMoDlt3PRPHamDQJR2");
+		if(Parse.User.current())
+		{
+			var Pending_SE_Class = Parse.Object.extend("Pending_SE");
+		    var query = new Parse.Query(Pending_SE_Class); 
+		    query.descending('updatedAt');
+		    query.find(
+		    {
+		        success: function(results)
+		        {
+		        	for(var i=0; i<results.length; ++i)
+		        	{
+		        		if(results[i].get('usersID') === Parse.User.current().id)
+		        		{
+		        			results[i].set('Paid', true);
+		        			results[i].save();
+
+		        			$.ajax(
+		        			{
+							    type: 'POST',
+							    url: 'receipt.php',
+							    data: 
+							    { 
+							    	ContactEmail: results[i].get('ContactEmail'),
+							    	ContactName: results[i].get('ContactName'),
+							    	Name: results[i].get('Name'),
+							    	Categories: results[i].get('Categories').join(),
+							    	Details: results[i].get('Details'),
+							    	SocialImpact: results[i].get('SocialImpact'),
+							    	Location: results[i].get('Location'),
+							    	MetroArea: results[i].get('MetroArea'),
+							    	Hours: results[i].get('Hours'),
+							    	Phone: results[i].get('Phone'),
+							    	Website: results[i].get('Website')
+								},
+							    dataType: 'json',
+							    complete: function(oXMLHttpRequest, textStatus)
+							    {
+								    if(oXMLHttpRequest.status === 200)
+								    {
+								    	console.log('YAY');
+								    }
+								}							   
+							});
+		        			return;
+		        		}
+		        	}
+		        },
+		        error: function(error)
+		        {
+		            console.log("Error: " + error.code + " " + error.message);		            
+		        }
+		    });
+		}	
+	});
+</script>
+
+
+
+
+</body>
+</html>

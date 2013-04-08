@@ -1,0 +1,312 @@
+.ui-page 
+{
+	max-width: 800px !important;
+    margin: 0 auto !important;
+    position: relative !important;
+}
+.ui-header
+{
+	max-width: 800px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    font-family: 'Georgia'
+}
+.ui-content
+{
+	box-shadow: 0px 0px 10px #000;
+}
+.ui-title
+{
+	width:100%;
+	margin: 0.3em auto 0.4em auto !important;
+	font-size:24px !important;
+}
+
+/*--------------- welcomePage -----------------------*/
+#versionLabelWelcomePage
+{
+	text-align: right;
+	margin-bottom: 0px;
+	padding: 0px;
+	color:#fff;
+}
+#welome_icon
+{
+	display: block;
+	max-width: 400px;
+	position: relative;
+	margin:0 auto 0 auto;
+	border-radius:10%;
+}
+@keyframes welome_icon
+{
+	0%	{transform: rotateY(-180deg)}
+	100% {transform: rotateY(0deg)}
+}
+@-moz-keyframes welome_icon 
+{
+	0%	{-moz-transform: rotateY(-180deg)}
+	100% {-moz-transform: rotateY(0deg)}
+}
+@-webkit-keyframes welome_icon
+{
+	0%	{-webkit-transform: rotateY(-180deg)}
+	100% {-webkit-transform: rotateY(0deg)}
+}
+@-o-keyframes welome_icon
+{
+	0%	{transform: rotateY(-180deg)}
+	100% {transform: rotateY(0deg)}
+}
+/*--------------- /welcomePage -----------------------*/
+
+
+
+/*------------------#home_page------------------*/
+#home_tagLine
+{
+	text-align:center;
+	font-size:17px;
+	font-family:'Georgia';
+	font-weight:bold;
+	margin-top:0px;
+	text-shadow:no;
+}
+
+#home_search_ul
+{
+	margin: 0px;
+}
+
+#home_search_li
+{
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+#searchInput_indexPage
+{
+	display: inline;
+	
+}
+
+#indexPage_SearchButton
+{
+	display: inline;
+}
+
+.collapsible_nav
+{
+	background-color: #502970; 
+	border-radius: 20px;
+	box-shadow: 0px 0px 10px #000;
+	padding: 0px;
+	margin-bottom:20px;
+}
+
+.categoryListContainer
+{
+	border:1px solid #502970;
+	border-radius:10px;
+	box-shadow:0px 0px 10px #111 inset;
+}
+
+.categoryList
+{
+	margin:6px !important;
+	box-shadow: 0px 0px 2px #fff;
+}
+/*------------------/indexPage------------------*/
+
+
+
+
+/*------------------BusinessListPage------------*/
+#businessList_ListingsButton_li
+{
+	max-height:35px !important;
+	min-height: 25px !important;
+	padding: 5px 5px 1px 5px;
+	margin: 2px;
+	text-shadow:none;
+	text-align: center;
+	font-size: 14px;
+	box-shadow: 0px 0px 5px #000;
+}
+#blp_2LinesImage
+{
+	width:22px;
+	position: relative;
+	margin:0 auto 20px auto;
+	float: none;
+	padding:5px;
+}
+/*------------------/BusinessListPage------------*/
+
+
+
+
+
+/*------------------BusinessPage------------*/
+#businessName_li
+{
+	text-align: center;
+	box-shadow:0px 0px 10px #000 inset;
+}
+
+#bp_section1
+{
+	box-shadow: 0px 0px 10px #000 inset;
+	padding:5px;	
+	background-color: #502970;
+	border-radius:10px;
+	margin-bottom:15px;
+}
+#bp_section1_ul
+{
+	border:1px solid #502970;
+	margin: 5px;
+}
+.businessInfo1_li
+{
+	border-top:none;
+	border-bottom:1px solid #000;
+}
+.bussinessImage
+{
+	max-width:50%; /*95%*/
+	box-shadow: 0px 0px 10px #000;
+	margin:5px;
+	border-radius:10px;
+	display:relative;
+	float:right;
+}
+#businessPage_socialImpact
+{
+	text-align: left;
+}
+
+#businessPage_Hours
+{
+	text-align: left;
+}
+
+#bp_section2
+{
+	box-shadow:0px 0px 5px #000;
+}
+.bp_section2_button
+{
+	border-radius:10px;
+}
+#bp_section2_location .ui-btn-text
+{
+	white-space: normal !important;
+}
+#bp_section2_location
+{
+	border-bottom-left-radius:0px;
+	border-bottom-right-radius:0px;
+}
+#bp_section2_phone
+{
+	border-radius:0px !important;
+}
+#bp_section2_website
+{
+	border-top-left-radius:0px;
+	border-top-right-radius:0px;
+}
+
+#businessPage_shareButton
+{
+	width:100px;
+	float:right;
+	box-shadow: 0px 0px 5px #000;
+	border-radius: 10px;
+}
+/*------------------/BusinessPage------------*/
+
+
+/*------------------mapPage-----------------*/
+#mapPage
+{
+	overflow:hidden;
+}
+#mp_content
+{
+	padding: 0px !important;
+}
+/*------------------/mapPage-----------------*/
+
+
+
+/*----------------More-----------*/
+.more_subContent
+{
+	box-shadow:0px 0px 10px #000 inset;
+	padding:15px;
+	border-radius: 10px;
+	background-color: #502970;
+	margin-bottom: 15px;
+}
+
+.more_subContent h2
+{
+	margin-top:0px;
+}
+
+.more_link
+{
+	font-weight:normal !important;
+}
+/*----------------/More-----------*/
+
+
+
+/*---------------Search--------------*/
+.searchInput_header
+{
+	float:right;
+	width:70%;
+	max-width:500px;
+	margin-right:5px;
+}
+.searchInputContainer
+{
+	box-shadow: 0 0 10px #111 inset;
+	padding:1px 5px 1px 5px;
+	border-radius:40px;
+}
+.ui-input-search
+{
+	box-shadow: 0px 0px 2px #111;
+}
+/*---------------/Search--------------*/
+
+
+
+#versionLabel
+{
+	text-align: right;
+	margin-bottom: 0px;
+	padding: 0px;
+}
+
+#mapInfoWindow_name
+{
+	max-width:220px;
+}
+#mapInfoWindow_content
+{
+	max-width:220px;
+}
+#mapInfoWindow_name
+{
+	color:#000;
+	text-shadow:none;
+}
+#mapInfoWindow_content
+{
+	text-shadow:none;
+}
