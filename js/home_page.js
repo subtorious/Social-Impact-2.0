@@ -12,32 +12,15 @@ var bGetMetroAreas_FirstTry= true,
 
 $(document).on("pagecreate", "#home_page" , function(event) 
 {
-	if(ie)
-	{
-		alert('Social Impact does not currently support Internet Explorer. Please open it with any other browser.');
-		return;
-	}
-
-	hideHomePage();
+	// hideHomePage();
 	Parse.initialize("Pb8MFFgzdpyNeKUuRiekCDrDD9ele3wyU603Ik9s", "AgYzrVA0QXaqXcWYfmmxGgTMoDlt3PRPHamDQJR2");
 	$('#home_page #versionLabel').html(appVersion);
 });
 
 
 $(document).on("pageinit", "#home_page" , function(event) 
-{
+{	
 	setupSearch('#home_searchInput', '.searchInputContainer');
-});
-
-
-$(document).on('pageshow', '#home_page', function(event, ui)
-{
-	if(google_UserGeoPoint != null)
-	{
-		return;
-	}
-
-	getUsersGeoLocation();
 	if(bParse)
 	{
 		getAllMetroAreas_FromParse();
@@ -48,15 +31,21 @@ $(document).on('pageshow', '#home_page', function(event, ui)
 		getMetroAreas();
 		getShopOnline_Categories();
 	}
+});
 
+
+$(document).on('pageshow', '#home_page', function(event, ui)
+{
 	if(!aSEs_Nearby)
 	{
-		$.mobile.loading('show',
-		{
-			text: 'Finding Your Location...',
-			textVisible: true,
-			theme: 'a'
-		});
+		// $.mobile.loading('show',
+		// {
+		// 	text: 'Finding Your Location...',
+		// 	textVisible: true,
+		// 	theme: 'a'
+		// });
+
+		getUsersGeoLocation();
 	}
 	$('#home_searchInput').attr('value', '');
 	pageshowGoogleAnalytics();
@@ -81,7 +70,14 @@ function getUsersGeoLocation()
 	    		{
 	    			if(bHomePage)
 	    			{
-			    		getDefaultLocation();
+	    				if(bParse)
+	    				{
+			    			getDefaultLocation();
+			    		}
+			    		else
+			    		{
+			    			getNearby_SEs(null);
+			    		}
 			    	}
 			    	else
 			    	{
@@ -114,8 +110,15 @@ function getUsersGeoLocation()
     }
 	else
 	{
-		console.log('home_page.js:: getUsersGeoLocation():: No GeoLocation');
-		getDefaultLocation();
+		si_log('home_page.js:: getUsersGeoLocation():: No GeoLocation');
+		if(bParse)
+		{
+			getDefaultLocation();
+		}
+		else
+		{
+			getNearby_SEs(null);
+		}
     }
 }
 
@@ -126,10 +129,8 @@ function setDefaultUserLocation()
 	oUserGeoPoint.latitude= 37.799675;
 	oUserGeoPoint.longitude= -122.265196;
 	google_UserGeoPoint= new google.maps.LatLng(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
-	if(bParse)
-	{
-		parse_UserGeoPoint= new Parse.GeoPoint(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
-	}
+	parse_UserGeoPoint= new Parse.GeoPoint(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
+	pointInUSorUK(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
 }
 
 
@@ -140,7 +141,7 @@ function setUserGeoLocation(usersCurrentGeoPoint)
 
 	if(usersCurrentGeoPoint == null || usersCurrentGeoPoint == undefined)
 	{
-		console.log('home_page.js:: setUserGeoLocation():: if(usersCurrentGeoPoint == null || usersCurrentGeoPoint == undefined)');
+		si_log('home_page.js:: setUserGeoLocation():: if(usersCurrentGeoPoint == null || usersCurrentGeoPoint == undefined)');
 		setDefaultUserLocation();
 		return;
 	}	
@@ -149,19 +150,13 @@ function setUserGeoLocation(usersCurrentGeoPoint)
 	oUserGeoPoint.longitude= usersCurrentGeoPoint.coords.longitude;
 	google_UserGeoPoint= new google.maps.LatLng(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
 	parse_UserGeoPoint= new Parse.GeoPoint(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
+	pointInUSorUK(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
 }
 
 
 
 function getNearby_SEs(usersCurrentGeoPoint)
 {
-	if(usersCurrentGeoPoint == null || usersCurrentGeoPoint == undefined)
-	{
-		console.log('indexPage.js:: getNearby_SEsFromParse():: if(usersCurrentGeoPoint == null || usersCurrentGeoPoint == undefined)');
-		getDefault_NearbySEs();
-		return;
-	}
-
 	$.mobile.loading( 'show',
 	{
 		text: 'Finding Nearby Social Enterprises...',
@@ -183,8 +178,17 @@ function getNearby_SEs(usersCurrentGeoPoint)
 	    dataType: 'json',
 	    complete: function(oXMLHttpRequest, textStatus)
 	    {
-		    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
+		    if(oXMLHttpRequest.status === 200)
 		    {
+		    	if(oXMLHttpRequest.responseText == -1)
+		    	{
+		    		if(usersCurrentGeoPoint != null)
+		    		{
+		    			getNearby_SEs(null);
+		    		}
+		    		return;
+		    	}
+
 		    	var jsonResponse= $.parseJSON(oXMLHttpRequest.responseText);
 				if(jsonResponse != null)
 				{
@@ -207,7 +211,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 					}
 					else
 					{
-						console.log('home_page.js:: getNearby_SEs():: if(aSEs_Nearby != null && aSEs_Nearby != undefined)');
+						si_log('home_page.js:: getNearby_SEs():: if(aSEs_Nearby != null && aSEs_Nearby != undefined)');
 						return;
 					}
 
@@ -231,7 +235,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 				}
 				else
 				{
-					console.log('indexPage.js:: getSI_Initial_Load_FromParse:: !results');
+					si_log('indexPage.js:: getSI_Initial_Load_FromParse:: !results');
 				}
 				return;
 		    }
@@ -256,7 +260,7 @@ function getMetroAreas()
 					aMetroAreas= jsonResponse['MetroAreas'];
 					if(aMetroAreas == null || aMetroAreas == undefined)
 					{
-						console.log('home_page.js:: getMetroAreas():: if(aMetroAreas == null || aMetroAreas == undefined)')
+						si_log('home_page.js:: getMetroAreas():: if(aMetroAreas == null || aMetroAreas == undefined)')
 					}
 
 					oMetroAreas_GeoLocation= new Object();
@@ -279,7 +283,7 @@ function getMetroAreas()
 		            	}
 		            	else
 		            	{
-		            		console.log('home_page.js:: getMetroArea_SEsFromParse():: if(str_name == null || str_name == undefined)');
+		            		si_log('home_page.js:: getMetroArea_SEsFromParse():: if(str_name == null || str_name == undefined)');
 		            	}
 		            }
 
@@ -287,7 +291,7 @@ function getMetroAreas()
 				}
 				else
 				{
-					console.log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
+					si_log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
 				}
 				
 				return;
@@ -313,13 +317,13 @@ function getShopOnline_Categories()
 					aOnline_Categories= jsonResponse['ShopOnline_Categories'];
 					if(aOnline_Categories == null || aOnline_Categories == undefined)
 					{
-						console.log('home_page.js:: getShopOnline_Categories():: if(aOnline_Categories == null || aOnline_Categories == undefined)')
+						si_log('home_page.js:: getShopOnline_Categories():: if(aOnline_Categories == null || aOnline_Categories == undefined)')
 					}
 					loadShopOnline_CategoryList();
 				}
 				else
 				{
-					console.log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
+					si_log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
 				}
 				
 				return;
@@ -367,12 +371,12 @@ function getNearby_SEsFromParse(usersCurrentGeoPoint)
 			}
 			else
 			{
-				console.log('home_page.js:: getSI_Initial_Load_FromParse:: !results');
+				si_log('home_page.js:: getSI_Initial_Load_FromParse:: !results');
 			}
 		},
 		error: function(error) 
 		{
-			console.log("Error: " + error.code + " " + error.message);
+			si_log("Error: " + error.code + " " + error.message);
 			if(bGetNearbySEs_FirstTry)
 			{
 				bGetNearbySEs_FirstTry= false;
@@ -440,7 +444,7 @@ function getDefaultLocation()
         },
         error: function(error)
         {
-            console.log("Error: " + error.code + " " + error.message);
+            si_log("Error: " + error.code + " " + error.message);
             if(bGetDefaultLocation_FirstTry)
             {
             	bGetDefaultLocation_FirstTry= false;
@@ -460,7 +464,7 @@ function loadNearbyCategoriesList_fromParse()
 {
 	if(aCategoriesIn_NearbySEs.length <= 0)
 	{
-		console.log('index.js:: loadNearbyCategoriesList():: if(aCategoriesIn_NearbySEs.length <= 0)');
+		si_log('index.js:: loadNearbyCategoriesList():: if(aCategoriesIn_NearbySEs.length <= 0)');
 		return;
 	}
 	var listHTML= '', listID= '';
@@ -573,14 +577,14 @@ function getAllMetroAreas_FromParse()
             	}
             	else
             	{
-            		console.log('home_page.js:: getMetroArea_SEsFromParse():: if(str_name == null || str_name == undefined)');
+            		si_log('home_page.js:: getMetroArea_SEsFromParse():: if(str_name == null || str_name == undefined)');
             	}
             }
             loadMetroAreaList_forParse();
         },
         error: function(error)
         {
-            console.log("Error: " + error.code + " " + error.message);
+            si_log("Error: " + error.code + " " + error.message);
             if(bGetMetroAreas_FirstTry)
             {
             	bGetMetroAreas_FirstTry= false;
@@ -607,7 +611,7 @@ function getMetroArea_FromParse()
         },
         error: function(error)
         {
-            console.log("Error: " + error.code + " " + error.message);
+            si_log("Error: " + error.code + " " + error.message);
         }
     });
 }
@@ -616,7 +620,7 @@ function loadMetroAreaList_forParse()
 {
 	if(aMetroArea_list.length <= 0)
 	{
-		console.log('index.js:: loadMetroAreaList():: if(aMetroArea_list.length <= 0)');
+		si_log('index.js:: loadMetroAreaList():: if(aMetroArea_list.length <= 0)');
 		return;
 	}
 
@@ -688,7 +692,7 @@ function getOnline_SEsFromParse()
         },
         error: function(error)
         {
-            console.log("Error: " + error.code + " " + error.message);
+            si_log("Error: " + error.code + " " + error.message);
             if(bGetOnlineSEs_FirstTry)
             {
             	bGetOnlineSEs_FirstTry= false;
@@ -702,7 +706,7 @@ function loadShopOnline_CategoryList_forParse()
 {
 	if(aOnline_Categories.length <= 0)
 	{
-		console.log('index.js:: loadShopOnline_CategoryList():: if(aOnline_Categories.length <= 0)');
+		si_log('index.js:: loadShopOnline_CategoryList():: if(aOnline_Categories.length <= 0)');
 		return;
 	}
 
@@ -783,7 +787,7 @@ function categoryIsExtraCategory(category)
 		|| category === 'Arts, Crafts & Clothing'
 		|| category === 'General Retail')
 	{
-		console.log('home_page.js:: categoryIsExtraCategory():: category= ' + category);
+		si_log('home_page.js:: categoryIsExtraCategory():: category= ' + category);
 		return true;
 	}
 	return false;
@@ -795,7 +799,7 @@ function loadNearbyCategoriesList()
 {
 	if(aCategoriesIn_NearbySEs.length <= 0)
 	{
-		console.log('index.js:: loadNearbyCategoriesList():: if(aCategoriesIn_NearbySEs.length <= 0)');
+		si_log('index.js:: loadNearbyCategoriesList():: if(aCategoriesIn_NearbySEs.length <= 0)');
 		return;
 	}
 	var listHTML= '', listID= '';
@@ -882,7 +886,7 @@ function loadMetroAreaList()
 {
 	if(aMetroAreas.length <= 0)
 	{
-		console.log('home_page.js:: loadMetroAreaList():: if(aMetroArea_list.length <= 0)');
+		si_log('home_page.js:: loadMetroAreaList():: if(aMetroArea_list.length <= 0)');
 		return;
 	}
 
@@ -928,7 +932,7 @@ function getSEs_forMetroArea(metroArea)
 {
 	if(metroArea == null || metroArea == undefined)
 	{
-		console.log('home_page.js:: getSEs_forMetroArea():: if(metroArea == null || metroArea == undefined)');
+		si_log('home_page.js:: getSEs_forMetroArea():: if(metroArea == null || metroArea == undefined)');
 		return;
 	}
 
@@ -948,20 +952,20 @@ function getSEs_forMetroArea(metroArea)
 					aSEs_MetroArea= jsonResponse['SEs_forMetroArea'];
 					if(aSEs_MetroArea == null || aSEs_MetroArea == undefined)
 					{
-						console.log('home_page.js:: getSEs_forMetroArea():: if(aSEs_MetroArea == null || aSEs_MetroArea == undefined)')
+						si_log('home_page.js:: getSEs_forMetroArea():: if(aSEs_MetroArea == null || aSEs_MetroArea == undefined)')
 					}
 					$.mobile.changePage('#businessListPage');
 				}
 				else
 				{
-					console.log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
+					si_log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
 				}
 				
 				return;
 		    }
 		    else
 		    {
-		    	console.log('home_page.js:: getSEs_forMetroArea():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
+		    	si_log('home_page.js:: getSEs_forMetroArea():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
 		    }
 		}							   
 	});
@@ -975,7 +979,7 @@ function loadShopOnline_CategoryList()
 {
 	if(aOnline_Categories.length <= 0)
 	{
-		console.log('home_page.js:: loadShopOnline_CategoryList():: if(aOnline_Categories.length <= 0)');
+		si_log('home_page.js:: loadShopOnline_CategoryList():: if(aOnline_Categories.length <= 0)');
 		return;
 	}
 
@@ -986,7 +990,7 @@ function loadShopOnline_CategoryList()
 		if(count > 0 || strcmp(aOnline_Categories[i].Category, 'Everything') == const_StringsEqual)
 		{
 			totalCount+= count;
-			listID= aOnline_Categories[i].Category + '_ListItem';
+			listID= aOnline_Categories[i].Category + '_shopOnline';
 			listID= listID.replace(/\s/g, "");
 			listID= listID.replace(/&/g, '_');
 			listID= listID.replace(/,/g, '_');
@@ -1009,7 +1013,7 @@ function loadShopOnline_CategoryList()
 
 	for(var i=0; i < aOnline_Categories.length; i++)
 	{
-		listID= aOnline_Categories[i].Category + '_ListItem';
+		listID= aOnline_Categories[i].Category + '_shopOnline';
 		listID= listID.replace(/\s/g, "");
 		listID= listID.replace(/&/g, '_');
 		listID= listID.replace(/,/g, '_');
@@ -1023,15 +1027,6 @@ function loadShopOnline_CategoryList()
 			getSEs_forShopOnlineCategory(SE_Category);
 		});
 	}	
-	$('#Everything_ShopOnline').on('click', function(event, ui) 
-	{
-		b_OnlineListings= true;
-		b_NearbyListings= false;
-		b_MetroAreaListings= false;
-		b_SearchListings= false;
-		SE_Category= 'Everything';
-		getSEs_forShopOnlineCategory(SE_Category);
-	});
 	$('#onlineCategoryList').listview('refresh');
 }
 
@@ -1041,7 +1036,7 @@ function getSEs_forShopOnlineCategory(category)
 {
 	if(category == null || category == undefined)
 	{
-		console.log('home_page.js:: getSEs_forShopOnlineCategory():: if(category == null || category == undefined)');
+		si_log('home_page.js:: getSEs_forShopOnlineCategory():: if(category == null || category == undefined)');
 		return;
 	}
 
@@ -1061,20 +1056,20 @@ function getSEs_forShopOnlineCategory(category)
 					aSEs_Online= jsonResponse['SEs_forMetroArea'];
 					if(aSEs_Online == null || aSEs_Online == undefined)
 					{
-						console.log('home_page.js:: getSEs_forMetroArea():: if(aSEs_MetroArea == null || aSEs_MetroArea == undefined)')
+						si_log('home_page.js:: getSEs_forMetroArea():: if(aSEs_MetroArea == null || aSEs_MetroArea == undefined)')
 					}
 					$.mobile.changePage('#businessListPage');
 				}
 				else
 				{
-					console.log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
+					si_log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
 				}
 				
 				return;
 		    }
 		    else
 		    {
-		    	console.log('home_page.js:: getSEs_forMetroArea():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
+		    	si_log('home_page.js:: getSEs_forMetroArea():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
 		    }
 		}							   
 	});

@@ -29,7 +29,7 @@ function needHomePageRedirect()
 			&& (strcmp(pageID, '#home_page') != const_StringsEqual)
 			&& (strcmp(pageID, '') != const_StringsEqual))
 		{
-			console.log('needHomePageRedirect');
+			si_log('needHomePageRedirect');
 			$.mobile.changePage('#home_page');
 			return true;
 		}

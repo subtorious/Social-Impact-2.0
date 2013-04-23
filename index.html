@@ -12,9 +12,9 @@
 
 	<!-- App Version -->
 	<script>
-		var appVersion= 'v2.0.49';
+		var appVersion= 'v2.0.78';
 
-		var bParse= true;
+		var bParse= false;
 	</script>
 
 	<!-- JQM Scripts -->
@@ -36,6 +36,7 @@
 	<!-- Page Scripts -->	
 	<script src='js/generalPage.js'></script>	
 	<script src='js/search.js'></script>
+	<script src='js/moreSI_Page.js'></script>
 	<script src='js/businessPage.js'></script>
 	<script src='js/businessListPage.js'></script>
 	<script src='js/home_page.js'></script>
@@ -51,8 +52,21 @@
 			pageshowGoogleAnalytics();
 		});
 	</script>
+
+<!-- TESTINGS -->
+	<!-- // <script src='addParseDB.js'></script> -->
 </head> 
 <body> 
+
+
+<!-- TESTING -->
+<!-- <div data-role="page"  data-theme='g'>
+	
+	<div data-role="content" id='welcome_content' data-theme='g'>
+		<button onclick='fixDB()'>Fix DB</button>
+	</div>
+
+</div> -->
 
 
 
@@ -144,12 +158,7 @@
 		</div><br/>
 		<div id='versionLabel'></div>
 
-		<div data-role="popup" id="searchPopup_indexPage" data-position-to='#home_searchInput' data-theme='d'>
-			<ul data-role='listview' data-inset='true' data-theme='d'>
-				<li onclick='searchLocationSelected()' style='cursor:pointer'>Search Address, City, State or Postal Code</li>
-				<li onclick='searchSI_DatabaseSelected()' style='cursor:pointer'>Search SI Database</li>
-			</ul>
-		</div>
+		<div id='console'>**********************************<br></div>
 
 	</div>
 </div>
@@ -231,6 +240,32 @@
 	</div><!-- /content -->
 
 </div><!-- /businessPage -->
+
+
+<div data-role="page" id="moreSI_Page" data-theme='g'>
+
+	<div data-role="header" id='moreSI_PageHeader' data-position="fixed">
+		<a href='#businessPage' data-icon='arrow-l' id='moreSI_Page_Back'>Back</a>
+		<div class='searchInput_header' id='searchInputHeader_moreSI_Page'>
+		    <input  type="search" 
+				    data-theme='b' 
+				    data-mini='true' 
+				    name="searchInput" 
+				    id="searchInput_businessPage" 
+				    placeholder="  Search Social Impact"/>
+		</div>
+	</div><!-- /header -->
+
+	<div data-role="content" id='moreSIPageContent' data-theme='g'>	
+		<ul data-role="listview" id='moreName_listview' data-inset='true'>
+			<li id='moreName_li' class='businessPage_li'></li>
+		</ul>
+		<div id='moreSI_section1'><ul data-role="listview" id='moreSI_section1_ul' ></ul></div>
+	</div><!-- /content -->
+
+</div>
+
+
 
 
 

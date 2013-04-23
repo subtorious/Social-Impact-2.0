@@ -97,14 +97,14 @@ function setupMap_ListingsPage()
 	{
 		if(b_NearbyListings)
 		{
-			setMapToGeoPoint('#bp_map_canvas', google_UserGeoPoint);
+			setMapToGeoPoint('#bp_map_canvas', google_UserGeoPoint, false);
 			addMapLocationMarker('#bp_map_canvas', google_UserGeoPoint, true, null);
 		}
 		else if(b_MetroAreaListings)
 		{
 			var metroArea_geoLocation=oMetroAreas_GeoLocation[SE_Category];
 			var google_MetroArea_geolocation= new google.maps.LatLng(metroArea_geoLocation.latitude, metroArea_geoLocation.longitude);
-			setMapToGeoPoint('#bp_map_canvas', google_MetroArea_geolocation);
+			setMapToGeoPoint('#bp_map_canvas', google_MetroArea_geolocation, false);
 		}
 		var aSEs_toDisplay= getTheSEsToDisplay();
 		displaySE_Listings(aSEs_toDisplay, true);
@@ -283,8 +283,7 @@ function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMove
 		}						
 	}
 
-	if(SE_GeoLocation != undefined && SE_GeoLocation != null 
-		&& ((b_SearchListings && bMoveToThisLocationOnMap) || !b_SearchListings))
+	if(SE_GeoLocation != undefined && SE_GeoLocation != null)
 	{
 		SE_google_GeoPoint= new google.maps.LatLng(SE_GeoLocation.latitude, SE_GeoLocation.longitude);
 		if(SE_google_GeoPoint != null && SE_google_GeoPoint != undefined)
@@ -292,7 +291,7 @@ function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMove
 			addMapLocationMarker('#bp_map_canvas', SE_google_GeoPoint, false, SE, bOpenInfoWindow_forMapMarker);
 			if(bMoveToThisLocationOnMap)
 			{
-				setMapToGeoPoint('#bp_map_canvas', SE_google_GeoPoint);
+				setMapToGeoPoint('#bp_map_canvas', SE_google_GeoPoint, false);
 			}
 		}		
 	}
@@ -309,7 +308,23 @@ function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMove
 		seCategories= SE.Categories;
 	}
 
-	if($.inArray('Social Enterprise Alliance', seCategories) >= 0)
+	var bSEA= false;
+	if(bParse)
+	{
+		if($.inArray('Social Enterprise Alliance', seCategories) >= 0)
+		{
+			bSEA= true;
+		}
+	}
+	else
+	{
+		if(seCategories.indexOf('Social Enterprise Alliance') > -1)
+		{
+			bSEA= true;
+		}
+	}
+
+	if(bSEA)
 	{
 		listingsHTML+= 'style="background:#7DC9DB"';
 		seaIconHTML= '<img src="Images/sea.jpg" title="Social Enterprise Alliance" onclick="openSEA_Website()"/>';
@@ -340,10 +355,20 @@ function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMove
 
 	if(SE_GeoLocation != undefined && SE_GeoLocation != null && parse_UserGeoPoint != null && parse_UserGeoPoint != undefined)
 	{
-		listingsHTML+= 
-		'<p>'  
-			+ (Math.round(SE_GeoLocation.milesTo(parse_UserGeoPoint) * 10) / 10) 
-		+' Miles</p>';
+		if(bInUSorUK)
+		{
+			listingsHTML+= 
+			'<p>'  
+				+ (Math.round(SE_GeoLocation.milesTo(parse_UserGeoPoint) * 10) / 10) 
+			+' Miles</p>';
+		}
+		else
+		{
+			listingsHTML+= 
+			'<p>'  
+				+ (Math.round(SE_GeoLocation.kilometersTo(parse_UserGeoPoint) * 10) / 10)
+			+' Kilometers</p>';
+		}
 	}
 	
 	listingsHTML+= '</a></li>';

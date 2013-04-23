@@ -1,12 +1,17 @@
-// var SE_GoogleGeoLocation;
-
 $(document).on('pageinit', '#mapPage', function(event, ui)
 {
 	setupSearch('#mp_searchInput', '#mp_searchInputHeader');
+	
 });
 
 $(document).on("pageshow", "#mapPage", function(event, ui) 
 {
+	if(SE_forBusinessPage == null)
+	{
+		$.mobile.changePage('#home_page');
+		return;
+	}
+
 	var SE_GoogleGeoLocation, SE_GeoLocation;
 	if(bParse)
 	{
@@ -24,17 +29,17 @@ $(document).on("pageshow", "#mapPage", function(event, ui)
 	}
 	else
 	{
-		console.log('mapPage.js:: pageshow:: if(SE_GeoLocation != undefined || SE_GeoLocation != null)');
+		si_log('mapPage.js:: pageshow:: if(SE_GeoLocation != undefined || SE_GeoLocation != null)');
 	}
 
 
 	if(SE_GoogleGeoLocation != undefined && SE_GoogleGeoLocation != null)
 	{
-		setMapToGeoPoint('#mp_map_canvas', SE_GoogleGeoLocation);	
+		setMapToGeoPoint('#mp_map_canvas', SE_GoogleGeoLocation, true);	
 	}
 	else
 	{
-		console.log('mapPage.js:: pagecreate:: !SE_GoogleGeoLocation');
+		si_log('mapPage.js:: pagecreate:: !SE_GoogleGeoLocation');
 		$.mobile.changePage('#home_page')
 	}
 	$('#mp_map_canvas').gmap('clear', 'markers');

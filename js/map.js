@@ -4,14 +4,19 @@ oUserGeoPoint=
 	latitude: 0,
 	longitude: 0
 },
-parse_UserGeoPoint, google_UserGeoPoint= null;
+parse_UserGeoPoint, google_UserGeoPoint= null,
+bInUSorUK= true;
 
 
-function setMapToGeoPoint(map_canvas, google_geoPoint)
+function setMapToGeoPoint(map_canvas, google_geoPoint, bSE_Map_Page)
 {
 	$(map_canvas).gmap('option', 'center', google_geoPoint);
 	var zoom_level= 11;
-	if(SE_Category === 'Washington DC/Baltimore')
+	if(bSE_Map_Page)
+	{
+		zoom_level= 13;
+	}
+	else if(SE_Category === 'Washington DC/Baltimore')
 	{
 		zoom_level= 9;
 	}
@@ -79,7 +84,21 @@ function addMapLocationMarker(map_canvas, google_GeoPoint, bIsUserLocation, SE_f
 			{
 				seGeoLocation= new Parse.GeoPoint({latitude:SE_forMapMarker.Latitude, longitude:SE_forMapMarker.Longitude});
 			}
-			infoHTML+= (Math.round(seGeoLocation.milesTo(parse_UserGeoPoint) * 10) / 10) + ' Miles';
+
+			if(bInUSorUK)
+			{
+				infoHTML+= 
+				'<p>'  
+					+ (Math.round(seGeoLocation.milesTo(parse_UserGeoPoint) * 10) / 10) 
+				+' Miles</p>';
+			}
+			else
+			{
+				infoHTML+= 
+				'<p>'  
+					+ (Math.round(seGeoLocation.kilometersTo(parse_UserGeoPoint) * 10) / 10)
+				+' Kilometers</p>';
+			}
 		}
 		
 		infoHTML+='</div>';

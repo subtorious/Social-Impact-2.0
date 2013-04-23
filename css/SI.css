@@ -225,8 +225,34 @@
 	box-shadow: 0px 0px 5px #000;
 	border-radius: 10px;
 }
+#si_more_button
+{
+	color:#aaa;
+	cursor:pointer;
+}
 /*------------------/BusinessPage------------*/
 
+
+/*-----------------moreSI_Page---------------*/
+#moreName_li
+{
+	text-align: center;
+	box-shadow:0px 0px 10px #000 inset;
+}
+#moreSI_section1
+{
+	box-shadow: 0px 0px 10px #000 inset;
+	padding:5px;	
+	background-color: #502970;
+	border-radius:10px;
+	margin-bottom:15px;
+}
+#moreSI_section1_ul
+{
+	border:1px solid #502970;
+	margin: 5px;
+}
+/*-----------------/moreSI_Page---------------*/
 
 /*------------------mapPage-----------------*/
 #mapPage

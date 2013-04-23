@@ -9,8 +9,8 @@
 
 	<!-- App Version -->
 	<script>
-		var appVersion= 'v0.0.25';
-		var bParse= true;
+		var appVersion= 'v0.0.27';
+		var bParse= false;
 	</script>
 
 	<!-- JQM Scripts -->
@@ -147,7 +147,7 @@
 		        data-ajax= 'false'/>
 
         <br/><br/>
-        <label for="fileupload" id="ImageUploadLabel">* Select an Image to be uploaded and displayed for your Social Enterprise:</label>
+        <label for="fileupload" id="ImageUploadLabel">Select an Image to be uploaded and displayed for your Social Enterprise (png, jpeg, tiff):</label>
 		<form id="fileupload_form" name="fileupload" enctype="multipart/form-data" method="post">
 			<input type="file" name="fileselect" id="fileselect"></input>
 		</form>
@@ -253,7 +253,7 @@
 		        data-ajax= 'false'/>
 
         <br/><br/> 
-        <label for="SocialImpact" id='SocialImpactLabel'>* Social Impact (Max 130 characters):</label>
+        <label for="SocialImpact" id='SocialImpactLabel'>* Social Impact:</label>
 		<input  type="text" 
 			    name="SocialImpact" 
 			    id="SocialImpact" 
@@ -268,8 +268,6 @@
 		<div  data-role="fieldcontain" id='MetroArea_fieldcontain'>
 			<fieldset data-role="controlgroup" id='MetroAreas_List'>
 			<label>Select, if your business is located within or near one of these Metro Areas:</label>
-		     	<!-- <input type="radio" name="radio-choice" id="metroarea_none" value="choice-1" checked="checked" /> -->
-		     	<!-- <label for="metroarea_none">Not within or near any of these Metro Areas</label> -->
 			</fieldset>
 		</div>
 
@@ -290,9 +288,6 @@
 				<input type="checkbox" name="Retail" id="Retail" class="custom" />
 				<label for="Retail">Other Retail</label>
 
-				<input type="checkbox" name="ShopOnline" id="ShopOnline" class="custom" />
-				<label for="ShopOnline">Online Sales</label>
-
 				<input type="checkbox" name="b2b" id="b2b" class="custom" />
 				<label for="b2b">Business to Business (such as wholesale, janitorial service, temp agency, etc)</label>
 				
@@ -309,6 +304,19 @@
 				        value=''
 				        data-theme='d'
 				        data-ajax= 'false'/>
+		    </fieldset>
+		</div>
+
+
+		<br/>
+        <div  data-role="fieldcontain">
+		 	<fieldset data-role="controlgroup">
+		 		<label id='categories_legend'>* Does your business sell products online?:</label>
+				<input type="radio" name="radio-choice" id="ShopOnline_Yes" value="choice-1" />
+				<label for="ShopOnline_Yes">Yes</label>
+
+				<input type="radio" name="radio-choice" id="ShopOnline_No" value="choice-2" />
+				<label for="ShopOnline_No">No</label>
 		    </fieldset>
 		</div>
 
@@ -346,7 +354,7 @@
 				<label for="Double">Double or Triple Bottom Line Company</label>
 
 				<input type="checkbox" name="SEA" id="SEA" class="custom" />
-				<label for="SEA">Social Enterprise Alliance</label>
+				<label for="SEA">Social Enterprise Alliance (Organizational Member)</label>
 
 				<input type="checkbox" name="Other2" id="Other2" class="custom" />
 				<label for="Other2" id='Other2_label'>Other</label>
@@ -375,6 +383,7 @@
 		
 
 		<br/><br/> 
+		<b>Questions/problems?</b> Contact hello@socialimpactapp.com.
 		<div style='text-align:right' id='add_a_business_version'></div>
 
     </div>

@@ -132,7 +132,7 @@ function performSearch(searchInput)
 		$.mobile.changePage('#businessListPage'); 
 	}
 
-	console.log('Searching for ' + searchString);
+	si_log('Searching for ' + searchString);
 }
 
 
@@ -151,7 +151,7 @@ function searchSI_Database()
 		    {
 		    	if(strcmp(oXMLHttpRequest.responseText, '-1') === const_StringsEqual)
 		    	{
-		    		console.log('No results');
+		    		si_log('No results');
 		    		noResultsForSearch();
 		    		return;
 		    	}
@@ -187,13 +187,13 @@ function searchSI_Database()
 					}
 					else
 					{
-						console.log('search.js:: searchSI_Database():: if(aSEs_fromSearch != null && aSEs_fromSearch != undefined)');
+						si_log('search.js:: searchSI_Database():: if(aSEs_fromSearch != null && aSEs_fromSearch != undefined)');
 						return;
 					}
 				}
 				else
 				{
-					console.log('search.js:: searchSI_Database:: jsonResponse == null');
+					si_log('search.js:: searchSI_Database:: jsonResponse == null');
 				}
 				return;
 		    }
@@ -216,7 +216,7 @@ function searchLocation()
 	{
 		success: function(results) 
 		{
-			console.log("search.js:: searchLocation:: Successfully retrieved " + results.length + " objects.");
+			si_log("search.js:: searchLocation:: Successfully retrieved " + results.length + " objects.");
 
 			bSearching= false;
 			if(results.length <= 0)
@@ -232,7 +232,7 @@ function searchLocation()
 		},
 		error: function(error) 
 		{
-			console.log("search.js:: searchLocation:: Error: " + error.code + " " + error.message);
+			si_log("search.js:: searchLocation:: Error: " + error.code + " " + error.message);
 			if(search_firstTry)
 			{
 				searchInput= false;
@@ -251,13 +251,6 @@ function searchLocation()
 function searchSI_Database_Parse()
 {
 	var SocialEnterpriseClass = Parse.Object.extend("SocialEnterprise");
-
-	// var asWritten_query_Name_equals= new Parse.Query(SocialEnterpriseClass);
-	// asWritten_query_Name_equals.equalTo('Name', searchString);
-	// var lowercase_query_Name_equals= new Parse.Query(SocialEnterpriseClass);
-	// lowercase_query_Name_equals.equalTo('Name', lowercase_SearchString);
-	// var titlecase_query_Name_equals= new Parse.Query(SocialEnterpriseClass);
-	// titlecase_query_Name_equals.equalTo('Name', titlecase_SearchString);
 
 	var asWritten_query_Name= new Parse.Query(SocialEnterpriseClass);
 	asWritten_query_Name.contains('Name', searchString);
@@ -281,9 +274,7 @@ function searchSI_Database_Parse()
 	titlecase_query_SI.contains('SocialImpact', titlecase_SearchString);
 
 	var query= Parse.Query.or(  
-								// asWritten_query_Name_equals,
-								// lowercase_query_Name_equals,
-								// titlecase_query_Name_equals);
+
 
 								// asWritten_query_Name,
 								lowercase_query_Name, 
@@ -299,7 +290,7 @@ function searchSI_Database_Parse()
 	{
 		success: function(results) 
 		{
-			console.log("search.js:: searchSI_Database:: Successfully retrieved " + results.length + " objects.");
+			si_log("search.js:: searchSI_Database:: Successfully retrieved " + results.length + " objects.");
 
 			bSearching= false;
 			if(results.length <= 0)
@@ -318,7 +309,7 @@ function searchSI_Database_Parse()
 		},
 		error: function(error) 
 		{
-			console.log("search.js:: searchSI_Database:: Error: " + error.code + " " + error.message);
+			si_log("search.js:: searchSI_Database:: Error: " + error.code + " " + error.message);
 			if(search_firstTry)
 			{
 				searchInput= false;

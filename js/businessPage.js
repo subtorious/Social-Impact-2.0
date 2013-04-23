@@ -1,7 +1,6 @@
 var businessListResults, resultsClickedIndex, SE_forBusinessPage= null, 
 	SE_ID_fromHash= null, bBusinessPage_LoadedFromParam= false,
-	bBusinessPageActive= false, bCameFromMapPage= false;
-	// bMakeBackHome=false;
+	bBusinessPageActive= false, bCameFromMapPage= false, bBCorp= false;
 
 $(document).on('pageinit', '#businessPage', function(event, ui)
 {
@@ -18,7 +17,7 @@ $(document).on("pageshow", "#businessPage", function(event, ui)
 		getUsersGeoLocation();
 	}
 
-	if(bBusinessPage_LoadedFromParam)//SE_forBusinessPage == null)
+	if(bBusinessPage_LoadedFromParam)
 	{
 		if(SE_ID_fromHash != null)
 		{
@@ -54,12 +53,25 @@ function initBusinessPage()
 	var SE;
 	if(bParse)
 	{
+		var aCategories= SE_forBusinessPage.get('Categories');
+		var photo;
+		if($.inArray('"B Corp"', aCategories) > -1)
+		{
+			bBCorp= true;
+			photo= SE_forBusinessPage.get('PhotoURL');
+		}
+		else
+		{
+			bBCorp= false;
+			photo= SE_forBusinessPage.get('Photo');
+		}
+
 		SE=
 		{
 			id: SE_forBusinessPage.id, 
 			Name: SE_forBusinessPage.get('Name'),
 			Details: SE_forBusinessPage.get('Details'),
-			Photo: SE_forBusinessPage.get('Photo'),
+			Photo: photo,
 			SocialImpact: SE_forBusinessPage.get('SocialImpact'),
 			Hours: SE_forBusinessPage.get('Hours'),
 			Location: SE_forBusinessPage.get('Location'),
@@ -82,14 +94,33 @@ function initBusinessPage()
 	populateBusinessPage(SE);
     $.mobile.silentScroll(0);
     pageshowGoogleAnalytics();
-    window.history.replaceState( null , null,  document.location.href + "?se=" + SE.id);
+    if(!ie)
+    {
+    	window.history.replaceState( null , null,  document.location.href + "?se=" + SE.id);
+    }
 }
 
 
 function populateBusinessPage(SE)
 {
 	var nameSectionHTML= '';
-	if($.inArray('Social Enterprise Alliance', SE.Categories) >= 0)
+	var bSEA= false;
+	if(bParse)
+	{
+		if($.inArray('Social Enterprise Alliance', SE.Categories) >= 0)
+		{	
+			bSEA= true;
+		}
+	}
+	else
+	{
+		if(SE.Categories.indexOf('Social Enterprise Alliance') > -1)
+		{
+			bSEA= true;
+		}
+	}
+
+	if(bSEA)
 	{
 		nameSectionHTML+= '<img src="Images/sea.jpg" width="50px" style="float:right; cursor:hand; cursor: pointer;" title="Social Enterprise Alliance" onclick="openSEA_Website()"/>';
 	}
@@ -104,9 +135,9 @@ function populateBusinessPage(SE)
 function populate_bp_section1(SE)
 {
 	var photo= SE.Photo;
-	if(photo != undefined && photo != null)
+	if(photo != undefined && photo != null && photo != '')
 	{
-		if(bParse)
+		if(bParse && !bBCorp)
 		{
 			if(photo.url != null && photo.url != undefined)
 			{
@@ -137,7 +168,12 @@ function populate_bp_section1(SE)
 		  +'</div>'
 	  +'</li>';
 	
+
 	var socialImpact= SE.SocialImpact;
+	if(socialImpact.length >= 150)
+	{
+		socialImpact= socialImpact.substring(0, 150) + '<span id="si_more_button" onclick="openMoreSIPage()">... More</span>';
+	}
 	if(socialImpact == undefined || socialImpact == null)
 	{
 		socialImpact= '';
@@ -169,6 +205,19 @@ function populate_bp_section1(SE)
 		$('#bp_details_image').css('min-height', height);
 	});
 	$('#bp_section1_ul').listview('refresh');
+}
+
+
+function word_count(str)
+{
+	return str.split(' ').length;
+}
+
+function trim_words(theString, numWords) 
+{
+    expString = theString.split(/\s+/,numWords);
+    theNewString=expString.join(" ");
+    return theNewString;
 }
 
 
@@ -245,7 +294,7 @@ function loadSEFromID()
 			},
 			error: function(object, error) 
 			{
-				console.log('businessPage.js:: loadSEFromID():: error');
+				si_log('businessPage.js:: loadSEFromID():: error');
 				$.mobile.changePage('#home_page');
 			}
 		});
@@ -268,20 +317,20 @@ function loadSEFromID()
 						SE_forBusinessPage= jsonResponse['SE_forID'];
 						if(SE_forBusinessPage == null || SE_forBusinessPage == undefined)
 						{
-							console.log('businessPage.js:: loadSEFromID():: if(SE_forBusinessPage == null || SE_forBusinessPage == undefined)')
+							si_log('businessPage.js:: loadSEFromID():: if(SE_forBusinessPage == null || SE_forBusinessPage == undefined)')
 						}
 						initBusinessPage();
 					}
 					else
 					{
-						console.log('businessPage.js:: loadSEFromID:: if(jsonResponse != null)');
+						si_log('businessPage.js:: loadSEFromID:: if(jsonResponse != null)');
 					}
 					
 					return;
 			    }
 			    else
 			    {
-			    	console.log('businessPage.js:: loadSEFromID():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
+			    	si_log('businessPage.js:: loadSEFromID():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
 			    }
 			}							   
 		});
@@ -304,5 +353,11 @@ function makeBackButtonHome(bMakeHome)
 		$('#businessPage_Back .ui-btn-text').html('Back');
 		$('#businessPage_Back').attr('href', '#businessListPage');
 	}
+}
+
+
+function openMoreSIPage()
+{
+	$.mobile.changePage('#moreSI_Page');
 }
 

@@ -17,8 +17,8 @@ var bReadyToSubmit= true,
 	Website,
 	Details,
 	SocialImpact,
-	Categories= new Array(),
-	bShopOnline= false,
+	Categories= new Array(), strCategories,
+	nShopOnline= 0,
 	MetroArea,
 	imageFileResponse= null,
 	bSE_SuccessfullySubmitted= false,
@@ -112,7 +112,7 @@ function getMetroAreas()
 	    url: 'php/getMetroAreas.php',
 	    complete: function(oXMLHttpRequest, textStatus)
 	    {
-		    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
+		    if(oXMLHttpRequest.status === 200 && oXMLHttpRequest.responseText != -1)
 		    {
 		    	var jsonResponse= $.parseJSON(oXMLHttpRequest.responseText);
 				if(jsonResponse != null)
@@ -156,7 +156,7 @@ function loadMetroAreaList()
 		{
 			ma_name= aMetroAreas[i];
 		}
-		MA_ID= 'MA_' + ma_name;
+		MA_ID= 'MA_' + ma_name.replace("/", "").replace(/\s+/g, '');
 		metroAreaHTML+=
 			'<input type="radio" name="radio-choice" id="'+MA_ID+'" value="choice-'+choice_number+'"  />'
 			+'<label for="'+MA_ID+'">'+ma_name+'</label>';
@@ -318,16 +318,6 @@ function uploadImageFile(imageFile)
 
 function submitButtonClicked()
 {
-	if(bSE_SuccessfullySubmitted)
-	{
-		if(!bPhotoAssociated && (submittedObjectID != null))
-		{
-			associateFileWithParseObject(submittedObjectID);
-		}
-
-		return;
-	}
-
 	bReadyToSubmit= true;
 	checkAndStoreRequiredFields();
 	setSelectedMetroArea();
@@ -479,7 +469,7 @@ function checkAndStoreRequiredFields()
 	}
 
 	SocialImpact= $('#SocialImpact').attr('value');
-	if(SocialImpact == '' || SocialImpact.length > 130)
+	if(SocialImpact == '')
 	{
 		$('#SocialImpactLabel').css('color', '#f00');
 		bReadyToSubmit= false;
@@ -497,33 +487,24 @@ function setSelectedMetroArea()
 	{
 		MetroArea= '';
 	}
-	else if($("#metroarea_belfast").is(":checked"))
+
+	var MA_ID, ma_name, choice_number= 2;
+	for(var i=0; i<aMetroAreas.length; ++i)
 	{
-		MetroArea= 'Belfast';
-	}
-	else if($("#metroarea_chicago").is(":checked"))
-	{
-		MetroArea= 'Chicago';
-	}
-	else if($("#metroarea_london").is(":checked"))
-	{
-		MetroArea= 'London';
-	}
-	else if($("#metroarea_Melbourne").is(":checked"))
-	{
-		MetroArea= 'Melbourne';
-	}
-	else if($("#metroarea_sanfran").is(":checked"))
-	{
-		MetroArea= 'San Francisco Bay Area';
-	}
-	else if($("#metroarea_toronto").is(":checked"))
-	{
-		MetroArea= 'Toronto';
-	}
-	else if($("#metroarea_dc").is(":checked"))
-	{
-		MetroArea= 'Washington DC/Baltimore';
+		if(bParse)
+		{
+			ma_name= aMetroAreas[i].get('Name');
+		}
+		else
+		{
+			ma_name= aMetroAreas[i];
+		}
+		MA_ID= '#MA_' + ma_name.replace('/', '').replace(/\s+/g, '');
+		if($(MA_ID).is(":checked"))
+		{
+			MetroArea= ma_name;
+			break;
+		}
 	}
 }
 
@@ -531,6 +512,7 @@ function setSelectedMetroArea()
 
 function fillArrayOfSelectedCategories()
 {
+	Categories= new Array();
 	if($("#Restaurant").is(":checked"))
 	{
 		Categories.push('Food & Coffee');
@@ -561,10 +543,6 @@ function fillArrayOfSelectedCategories()
 	if($('#Other1').is(':checked'))
 	{
 		Categories.push($('#Other1_input').attr('value'));	
-	}
-	if($("#ShopOnline").is(":checked"))
-	{
-		bShopOnline= true;
 	}
 
 	if(Categories.length == 0)
@@ -622,24 +600,32 @@ function fillArrayOfSelectedCategories()
 
 	if(!bParse)
 	{
-		aTemp= Categories;
-		Categories= '';
-		if(aTemp.length > 0)
+		strCategories= '';
+		if(Categories.length > 0)
 		{
-			Categories+= '"';
+			strCategories+= '"';
 		}
-		for(var i=0; i<aTemp.length; ++i)
+		for(var i=0; i<Categories.length; ++i)
 		{
-			Categories+= aTemp[i];
-			if(i + 1 < aTemp.length)
+			strCategories+= Categories[i];
+			if(i + 1 < Categories.length)
 			{
-				Categories+= '","'
+				strCategories+= '","'
 			}
 			else
 			{
-				Categories+= '"';
+				strCategories+= '"';
 			}
 		}
+	}
+
+	if($("#ShopOnline_Yes").is(":checked"))
+	{
+		nShopOnline= 1;
+	}
+	else
+	{
+		nShopOnline= 0;
 	}
 }
 
@@ -664,7 +650,7 @@ function submitSEToParse()
 		pending_SE.set("Location", strLocation);
 		pending_SE.set("Name", Name);
 		pending_SE.set("Phone", $('#Phone').attr('value'));
-		pending_SE.set("ShopOnline", bShopOnline);
+		pending_SE.set("ShopOnline", nShopOnline);
 		pending_SE.set("SocialImpact", SocialImpact);
 		pending_SE.set("Website", $('#Website').attr('value'));
 		pending_SE.set('MetroArea', MetroArea);
@@ -701,7 +687,7 @@ function submitSE()
 	    { 
 	    	Approved: false,
 			Declined: false,
-			Categories: Categories.toString(),
+			Categories: strCategories,
 			ContactEmail: ContactEmail,
 			ContactName: ContactName,
 			Details: Details,
@@ -709,7 +695,7 @@ function submitSE()
 			Location: strLocation,
 			Name: Name,
 			Phone: $('#Phone').attr('value'),
-			ShopOnline: bShopOnline,
+			ShopOnline: nShopOnline,
 			SocialImpact: SocialImpact,
 			Website: $('#Website').attr('value'),
 			MetroArea: MetroArea,

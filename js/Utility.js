@@ -319,3 +319,50 @@ function isThisCurrentPage(pageID)
 	}
 	return false;
 }
+
+function pointInUSorUK(lat, lng)
+{
+	//UK
+	// lat= 51.507335;
+	// lng= -0.127683;
+
+	//Canada
+	// lat= 43.653226;
+	// lng= -79.383184;
+	
+	var geocoder = new google.maps.Geocoder();
+	if(geocoder) 
+	{
+		var latlng = new google.maps.LatLng(lat, lng);
+		geocoder.geocode({ 'latLng': latlng}, function (results, status) 
+		{
+			if (status == google.maps.GeocoderStatus.OK)
+			{
+				var address= results[0].formatted_address;
+				var reg= (new RegExp(/usa/i)).test(address);
+				if(reg)
+				{
+					bInUSorUK= true;
+					return;
+				}
+				
+				bInUSorUK= (new RegExp(/uk/i)).test(address);				
+			}
+			else 
+			{
+				si_log("Geocoding failed: " + status);
+				// console.log("Geocoding failed: " + status);
+			}			
+		});
+	}
+}
+
+
+function si_log(msg)
+{
+	if(!ie)
+	{
+		console.log(msg);
+		$('#console').append(msg + "\n");
+	}
+}
