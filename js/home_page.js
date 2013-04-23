@@ -169,7 +169,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'php/getNearby_SEs.php',
+	    url: 'http://www.socialimpactapp.com/php/getNearby_SEs.php',
 	    data: 
 	    { 
 	    	Lat: oUserGeoPoint.latitude,
