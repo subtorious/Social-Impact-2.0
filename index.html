@@ -31,17 +31,18 @@
 		{
 			function doInit() 
 	        {
-	            alert('Ready');
+	        	si_log('READY');
+	            // alert('Ready');
 	        }
 
 	        var dd = $.Deferred();
 	        var jqd = $.Deferred();
 	        $.when(dd, jqd).done(doInit);
-	        alert('below $.when')
+	        // alert('below $.when')
 
 	        $(document).on('mobileinit', function () 
 	        {
-	        	alert('mobileinit');
+	        	// alert('mobileinit');
 	        	si_log('mobileinit');
 				jqd.resolve();
 				$.support.cors = true;
