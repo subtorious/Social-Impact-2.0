@@ -178,7 +178,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'php/getNearby_SEs.php',
+	    url: urlForScript('php/getNearby_SEs.php'),
 	    data: 
 	    { 
 	    	Lat: oUserGeoPoint.latitude,

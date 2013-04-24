@@ -371,20 +371,10 @@ function si_log(msg)
 
 function remote_log(msg)
 {	
-	var remoteLog_URL;
-	if(bPhoneGap)
-	{
-		remoteLog_URL= 'http://www.socialimpactapp.com/testingSI/php/remote_log.php';
-	}
-	else
-	{
-		remoteLog_URL= 'php/remote_log.php';
-	}
-
 	$.ajax(
 	{
 	    type: 'POST',
-	    url: remoteLog_URL,
+	    url: urlForScript('php/remote_log.php'),
 	    data: 
 	    { 
 	    	log: msg
@@ -399,4 +389,15 @@ function remote_log(msg)
 	    	}
 		}		   
 	});
+}
+
+
+
+function urlForScript(script)
+{
+	if(bPhoneGap)
+	{
+		script= strServerPrefix_forPhonegap + script;
+	}
+	return script;
 }
