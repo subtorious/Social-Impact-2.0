@@ -21,9 +21,15 @@
 
 	<!-- JQM Scripts -->
 	<script src="js/jquery/jquery.1.8.3.min.js"></script>
+	<script src='js/Utility.js'></script>
 	<script>
 		if(bPhoneGap)
 		{
+			function doInit() 
+	        {
+	            alert('Ready');
+	        }
+
 	        var dd = $.Deferred();
 	        var jqd = $.Deferred();
 	        $.when(dd, jqd).done(doInit);
@@ -31,7 +37,7 @@
 
 	        $(document).on('mobileinit', function () 
 	        {
-	        	alert(mobileinit);
+	        	alert('mobileinit');
 	        	si_log('mobileinit');
 				jqd.resolve();
 				$.mobile.allowCrossDomainPages= true;			
@@ -39,18 +45,17 @@
 	    }
     </script>
 	<script src="js/jquery/jquery.mobile-1.2.0.min.js"></script>
-	<script src="cordova-2.6.0.js"></script>
+	<!-- <script src="js/cordova-2.6.0.js"></script> -->
     <script>
-        document.addEventListener('deviceready', deviceReady, false);
-        function deviceReady() 
-        {
-            dd.resolve();
-        }
-
-        function doInit() 
-        {
-            alert('Ready');
-        }
+    	if(bPhoneGap)
+    	{
+    		$.getScript('js/cordova-2.6.0.js');
+    		document.addEventListener('deviceready', deviceReady, false);
+	        function deviceReady() 
+	        {
+	            dd.resolve();
+	        }
+    	}        
     </script>
 	
 	<!-- Map Scripts -->
@@ -62,8 +67,6 @@
 	<!-- Parse Script -->
 	<script src='js/Parse/parse-1.1.14.min.js'></script>
 
-	<!-- Utility -->
-	<script src='js/Utility.js'></script>
 
 	<!-- Page Scripts -->	
 	<script src='js/generalPage.js'></script>	
