@@ -380,6 +380,7 @@ function remote_log(msg)
 	    	log: msg
 		},
 	    dataType: 'json',
+	    async:false,
 	    success: function(data)
 	    {
 	    	if(data == -1)
