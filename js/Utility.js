@@ -351,7 +351,6 @@ function pointInUSorUK(lat, lng)
 			else 
 			{
 				si_log("Geocoding failed: " + status);
-				// console.log("Geocoding failed: " + status);
 			}			
 		});
 	}
@@ -363,6 +362,31 @@ function si_log(msg)
 	if(!ie)
 	{
 		console.log(msg);
-		$('#console').append(msg + "\n");
+		if(bDEBUGGING)
+		{
+			remote_log(msg);
+		}
 	}
+}
+
+function remote_log(msg)
+{
+	$.ajax(
+	{
+	    type: 'POST',
+	    url: 'php/remote_log.php',
+	    data: 
+	    { 
+	    	log: msg
+		},
+	    dataType: 'json',
+	    success: function(data)
+	    {
+	    	if(data == -1)
+	    	{
+	    		console.log('FAILED TO REMOTE LOG');
+	    		return;
+	    	}
+		}		   
+	});
 }

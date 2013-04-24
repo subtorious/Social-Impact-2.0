@@ -12,7 +12,13 @@ var bGetMetroAreas_FirstTry= true,
 
 $(document).on("pagecreate", "#home_page" , function(event) 
 {
-	// hideHomePage();
+	si_log('home_page:: pagecreate');
+
+	hideHomePage();
+	if(bPhoneGap)
+	{
+		$.mobile.allowCrossDomainPages= true;
+	}
 	Parse.initialize("Pb8MFFgzdpyNeKUuRiekCDrDD9ele3wyU603Ik9s", "AgYzrVA0QXaqXcWYfmmxGgTMoDlt3PRPHamDQJR2");
 	$('#home_page #versionLabel').html(appVersion);
 });
@@ -20,6 +26,8 @@ $(document).on("pagecreate", "#home_page" , function(event)
 
 $(document).on("pageinit", "#home_page" , function(event) 
 {	
+	si_log('home_page:: pageinit');
+
 	setupSearch('#home_searchInput', '.searchInputContainer');
 	if(bParse)
 	{
@@ -36,14 +44,16 @@ $(document).on("pageinit", "#home_page" , function(event)
 
 $(document).on('pageshow', '#home_page', function(event, ui)
 {
+	si_log('home_page:: pageshow');
+
 	if(!aSEs_Nearby)
 	{
-		// $.mobile.loading('show',
-		// {
-		// 	text: 'Finding Your Location...',
-		// 	textVisible: true,
-		// 	theme: 'a'
-		// });
+		$.mobile.loading('show',
+		{
+			text: 'Finding Your Location...',
+			textVisible: true,
+			theme: 'a'
+		});
 
 		getUsersGeoLocation();
 	}
@@ -54,6 +64,7 @@ $(document).on('pageshow', '#home_page', function(event, ui)
 
 function getUsersGeoLocation()
 {
+	si_log('home_page:: getUsersGeoLocation');
 	if(navigator.geolocation)
     {
     	var bHomePage= false;
@@ -157,6 +168,8 @@ function setUserGeoLocation(usersCurrentGeoPoint)
 
 function getNearby_SEs(usersCurrentGeoPoint)
 {
+	si_log('home_page:: getNearby_SEs');
+
 	$.mobile.loading( 'show',
 	{
 		text: 'Finding Nearby Social Enterprises...',
@@ -169,7 +182,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'http://www.socialimpactapp.com/php/getNearby_SEs.php',
+	    url: 'php/getNearby_SEs.php',
 	    data: 
 	    { 
 	    	Lat: oUserGeoPoint.latitude,
@@ -178,6 +191,8 @@ function getNearby_SEs(usersCurrentGeoPoint)
 	    dataType: 'json',
 	    complete: function(oXMLHttpRequest, textStatus)
 	    {
+	    	si_log('home_page:: getNearby_SEs:: complete');
+
 		    if(oXMLHttpRequest.status === 200)
 		    {
 		    	if(oXMLHttpRequest.responseText == -1)
