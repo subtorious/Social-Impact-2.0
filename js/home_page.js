@@ -15,10 +15,6 @@ $(document).on("pagecreate", "#home_page" , function(event)
 	si_log('home_page:: pagecreate');
 
 	hideHomePage();
-	if(bPhoneGap)
-	{
-		$.mobile.allowCrossDomainPages= true;
-	}
 	Parse.initialize("Pb8MFFgzdpyNeKUuRiekCDrDD9ele3wyU603Ik9s", "AgYzrVA0QXaqXcWYfmmxGgTMoDlt3PRPHamDQJR2");
 	$('#home_page #versionLabel').html(appVersion);
 });
