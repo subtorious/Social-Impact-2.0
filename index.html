@@ -12,7 +12,7 @@
 
 	<!-- App Version -->
 	<script>
-		var appVersion= 'v2.0.80';
+		var appVersion= 'v2.0.81';
 
 		var bParse= false;
 		var bDEBUGGING= true;
@@ -40,6 +40,7 @@
 	        	alert('mobileinit');
 	        	si_log('mobileinit');
 				jqd.resolve();
+				$.support.cors = true;
 				$.mobile.allowCrossDomainPages= true;			
 	        });
 	    }
