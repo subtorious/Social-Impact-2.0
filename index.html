@@ -27,9 +27,11 @@
 	        var dd = $.Deferred();
 	        var jqd = $.Deferred();
 	        $.when(dd, jqd).done(doInit);
+	        alert('below $.when')
 
 	        $(document).on('mobileinit', function () 
 	        {
+	        	alert(mobileinit);
 	        	si_log('mobileinit');
 				jqd.resolve();
 				$.mobile.allowCrossDomainPages= true;			
