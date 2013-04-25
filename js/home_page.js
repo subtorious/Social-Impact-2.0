@@ -261,7 +261,7 @@ function getMetroAreas()
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'php/getMetroAreas.php',
+	    url: urlForScript('php/getMetroAreas.php'),
 	    complete: function(oXMLHttpRequest, textStatus)
 	    {
 		    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
@@ -318,7 +318,7 @@ function getShopOnline_Categories()
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'php/getCategories_forShopOnline.php',
+	    url: urlForScript('php/getCategories_forShopOnline.php'),
 	    complete: function(oXMLHttpRequest, textStatus)
 	    {
 		    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
@@ -438,7 +438,7 @@ function getDefaultLocation()
         				category= aCategoriesFromResults[k];
         				if(category != null && category != undefined)
         				{
-        					if((!(category in oCategoriesIn_NearbySEs)))// && !categoryIsExtraCategory(category))
+        					if((!(category in oCategoriesIn_NearbySEs)))
 	        				{
 	        					oCategoriesIn_NearbySEs[category]= 1;
 	        					aCategoriesIn_NearbySEs.push(category);
@@ -790,23 +790,6 @@ function loadShopOnline_CategoryList_forParse()
 // ------------------------END Parse Functions------------------------
 
 
-
-function categoryIsExtraCategory(category)
-{
-	if(    category === 'Affinity Groups'
-		|| category === 'Business to Business'
-		|| category === 'Catering'
-		|| category === 'Arts, Crafts & Clothing'
-		|| category === 'General Retail')
-	{
-		si_log('home_page.js:: categoryIsExtraCategory():: category= ' + category);
-		return true;
-	}
-	return false;
-}
-
-
-
 function loadNearbyCategoriesList()
 {
 	if(aCategoriesIn_NearbySEs.length <= 0)
@@ -951,7 +934,7 @@ function getSEs_forMetroArea(metroArea)
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'php/getSEs_forMetroArea.php',
+	    url: urlForScript('php/getSEs_forMetroArea.php'),
 	    data: {ma: metroArea},
 	    dataType: 'json',
 	    complete: function(oXMLHttpRequest, textStatus)
@@ -1055,7 +1038,7 @@ function getSEs_forShopOnlineCategory(category)
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'php/getSEs_forOnlineCategory.php',
+	    url: urlForScript('php/getSEs_forOnlineCategory.php'),
 	    data: {cat: category},
 	    dataType: 'json',
 	    complete: function(oXMLHttpRequest, textStatus)
