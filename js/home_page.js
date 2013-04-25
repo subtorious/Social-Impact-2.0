@@ -108,7 +108,7 @@ function getUsersGeoLocation()
 		    }
 		    else
 		    {
-		    	navigator.geolocation.getCurrentPosition(getNearby_SEs);	
+		    	navigator.geolocation.getCurrentPosition(getNearby_SEs, geolocationError);	
 		    }
 		}
 		else
@@ -128,6 +128,12 @@ function getUsersGeoLocation()
 			getNearby_SEs(null);
 		}
     }
+}
+
+
+function geolocationError(error)
+{
+	si_log('geolocationError:: code= ' + error['code'] + ', message= ' + error['message']);
 }
 
 
