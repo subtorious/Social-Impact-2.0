@@ -108,6 +108,8 @@ function getUsersGeoLocation()
 		    }
 		    else
 		    {
+		    	si_log('Before navigator.geolocation.getCurrentPosition(getNearby_SEs, geolocationError);');
+		    	
 		    	navigator.geolocation.getCurrentPosition(getNearby_SEs, geolocationError);	
 		    }
 		}
