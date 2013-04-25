@@ -51,8 +51,8 @@ $(document).on('pageshow', '#home_page', function(event, ui)
 			theme: 'a'
 		});
 
-		// getUsersGeoLocation();
-		getNearby_SEs(null);
+		getUsersGeoLocation();
+		// getNearby_SEs(null);
 	}
 	$('#home_searchInput').attr('value', '');
 	pageshowGoogleAnalytics();

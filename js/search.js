@@ -141,7 +141,7 @@ function searchSI_Database()
 	$.ajax(
 	{
 	    type: 'GET',
-	    url: 'php/searchSI_Database.php',
+	    url: urlForScript('php/searchSI_Database.php'),
 	    data: {s: searchString},
 	    dataType: 'json',
 	    complete: function(oXMLHttpRequest, textStatus)
