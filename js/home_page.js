@@ -65,7 +65,7 @@ function getUsersGeoLocation()
 	if(navigator.geolocation)
     {
     	var bHomePage= false;
-    	if(isThisCurrentPage('#home_page'))
+    	if(isThisCurrentPage('#home_page') || bPhoneGap)
     	{
     		bHomePage= true;
     	}
