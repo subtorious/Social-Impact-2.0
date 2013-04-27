@@ -52,7 +52,6 @@ $(document).on('pageshow', '#home_page', function(event, ui)
 		});
 
 		getUsersGeoLocation();
-		// getNearby_SEs(null);
 	}
 	$('#home_searchInput').attr('value', '');
 	pageshowGoogleAnalytics();
@@ -99,7 +98,6 @@ function getUsersGeoLocation()
 		    alert('Make sure to tell your browser to share your location. If you can\'t find your browser\'s location setting, check in its preferences, or try refreshing the page.')
 		}		   	   	
 
-		si_log('Before if(bHomePage)');
 		if(bHomePage)
 		{
 			if(bParse)

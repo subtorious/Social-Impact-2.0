@@ -12,14 +12,19 @@
 
 	<!-- App Version -->
 	<script>
-		var appVersion= 'v2.0.85';
+		var appVersion= 'v2.0.87';
 
 		var bParse= false;
 		var bDEBUGGING= true;
 		var bPhoneGap= true;
+
 		if(bPhoneGap)
 		{
 			var strServerPrefix_forPhonegap= 'http://www.socialimpactapp.com/testingSI/';
+		}
+		if(bDEBUGGING)
+		{
+			var nLogIndex= 0;
 		}
 	</script>
 
@@ -32,6 +37,12 @@
 			function doInit() 
 	        {
 	        	si_log('doInit');
+	        }
+
+	        function deviceReady() 
+	        {
+	        	si_log('deviceReady');
+	            dd.resolve();
 	        }
 
 	        var dd = $.Deferred();
@@ -52,12 +63,7 @@
     	if(bPhoneGap)
     	{
     		$.getScript('js/cordova-2.6.0.js');
-    		document.addEventListener('deviceready', deviceReady, false);
-	        function deviceReady() 
-	        {
-	        	si_log('deviceReady');
-	            dd.resolve();
-	        }
+    		document.addEventListener('deviceready', deviceReady, false);	        
     	}        
     </script>
     <script src="js/jquery/jquery.mobile-1.2.0.min.js"></script>

@@ -236,7 +236,7 @@ function populate_bp_section2(SE)
 	}
 	if(str_Phone != undefined && str_Phone != null && !(str_Phone === ''))
 	{
-		var formated_phone= str_Phone.replace(/\s/g, "");
+ 		var formated_phone= str_Phone.replace(/\s/g, "");
 		formated_phone= formated_phone.replace(/\(/g, "");
 		formated_phone= formated_phone.replace(/\)/g, "-");
 

@@ -377,7 +377,8 @@ function remote_log(msg)
 	    url: urlForScript('php/remote_log.php'),
 	    data: 
 	    { 
-	    	log: msg
+	    	log: msg,
+	    	log_index: nLogIndex
 		},
 	    dataType: 'json',
 	    async:false,
@@ -390,6 +391,8 @@ function remote_log(msg)
 	    	}
 		}		   
 	});
+
+	++nLogIndex;
 }
 
 
