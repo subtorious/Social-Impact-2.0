@@ -57,8 +57,13 @@
 				$.support.cors = true;
 				$.mobile.allowCrossDomainPages= true;
 				jqd.resolve();							
-				document.addEventListener('deviceready', deviceReady, false);
-	        });    		
+				
+	        });
+
+	        function bodyOnLoad()
+	        {
+	        	document.addEventListener('deviceready', deviceReady, false);
+	        }    		
 	    }
     </script>
     <script src="js/jquery/jquery.mobile-1.2.0.min.js"></script>
@@ -96,7 +101,7 @@
 <!-- TESTINGS -->
 	<!-- // <script src='addParseDB.js'></script> -->
 </head> 
-<body> 
+<body onload='bodyOnLoad()'> 
 
 
 <!-- TESTING -->
