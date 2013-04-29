@@ -34,6 +34,10 @@
 	<script>
 		if(bPhoneGap)
 		{
+			$.getScript('js/cordova-2.6.0.js');
+			var dd = $.Deferred();
+	        var jqd = $.Deferred();
+
 			function doInit() 
 	        {
 	        	si_log('doInit');
@@ -45,8 +49,6 @@
 	            dd.resolve();
 	        }
 
-	        var dd = $.Deferred();
-	        var jqd = $.Deferred();
 	        $.when(dd, jqd).done(doInit);
 
 	        $(document).on('mobileinit', function () 
@@ -56,15 +58,9 @@
 				$.mobile.allowCrossDomainPages= true;
 				jqd.resolve();							
 	        });
+	        	        
+    		document.addEventListener('deviceready', deviceReady, false);
 	    }
-    </script>
-	
-    <script>
-    	if(bPhoneGap)
-    	{
-    		$.getScript('js/cordova-2.6.0.js');
-    		document.addEventListener('deviceready', deviceReady, false);	        
-    	}        
     </script>
     <script src="js/jquery/jquery.mobile-1.2.0.min.js"></script>
 	
