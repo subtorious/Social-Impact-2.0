@@ -50,46 +50,7 @@ $(document).on('pagebeforehide', '#businessPage', function(e)
 
 function initBusinessPage()
 {
-	var SE;
-	if(bParse)
-	{
-		var aCategories= SE_forBusinessPage.get('Categories');
-		var photo;
-		if($.inArray('"B Corp"', aCategories) > -1)
-		{
-			bBCorp= true;
-			photo= SE_forBusinessPage.get('PhotoURL');
-		}
-		else
-		{
-			bBCorp= false;
-			photo= SE_forBusinessPage.get('Photo');
-		}
-
-		SE=
-		{
-			id: SE_forBusinessPage.id, 
-			Name: SE_forBusinessPage.get('Name'),
-			Details: SE_forBusinessPage.get('Details'),
-			Photo: photo,
-			SocialImpact: SE_forBusinessPage.get('SocialImpact'),
-			Hours: SE_forBusinessPage.get('Hours'),
-			Location: SE_forBusinessPage.get('Location'),
-			Website: SE_forBusinessPage.get('Website'),
-			Categories: SE_forBusinessPage.get('Categories'),
-			MetroArea: SE_forBusinessPage.get('MetroArea'),
-			ShopOnline: SE_forBusinessPage.get('ShopOnline'),
-			Latitude: SE_forBusinessPage.get('Latitude'),
-			Longitude: SE_forBusinessPage.get('Longitude'),
-			ContactEmail: SE_forBusinessPage.get('ContactEmail'),
-			ContactName: SE_forBusinessPage.get('ContactName'),
-			DistanceToUser: null
-		};
-	}
-	else
-	{
-		SE= SE_forBusinessPage;
-	}
+	var SE= SE_forBusinessPage;
 	
 	populateBusinessPage(SE);
     $.mobile.silentScroll(0);
@@ -105,20 +66,11 @@ function populateBusinessPage(SE)
 {
 	var nameSectionHTML= '';
 	var bSEA= false;
-	if(bParse)
+	if(SE.Categories.indexOf('Social Enterprise Alliance') > -1)
 	{
-		if($.inArray('Social Enterprise Alliance', SE.Categories) >= 0)
-		{	
-			bSEA= true;
-		}
+		bSEA= true;
 	}
-	else
-	{
-		if(SE.Categories.indexOf('Social Enterprise Alliance') > -1)
-		{
-			bSEA= true;
-		}
-	}
+	
 
 	if(bSEA)
 	{
@@ -135,21 +87,7 @@ function populateBusinessPage(SE)
 function populate_bp_section1(SE)
 {
 	var photo= SE.Photo;
-	if(photo != undefined && photo != null && photo != '')
-	{
-		if(bParse && !bBCorp)
-		{
-			if(photo.url != null && photo.url != undefined)
-			{
-				photo= photo.url;
-			}
-			else
-			{
-				photo= 'Images/SocialImpact_ICON_Image1024.png';
-			}
-		}
-	}
-	else
+	if(photo == undefined || photo == null || photo != '')
 	{
 		photo= 'Images/SocialImpact_ICON_Image1024.png';
 	}
@@ -278,63 +216,41 @@ function bp_location_clicked()
 
 function loadSEFromID()
 {
-	// bMakeBackHome= true;
 	makeBackButtonHome(true);
-	if(bParse)
+	
+	$.ajax(
 	{
-		Parse.initialize("Pb8MFFgzdpyNeKUuRiekCDrDD9ele3wyU603Ik9s", "AgYzrVA0QXaqXcWYfmmxGgTMoDlt3PRPHamDQJR2");
-		var SocialEnterprise = Parse.Object.extend('SocialEnterprise');
-		var query = new Parse.Query(SocialEnterprise);
-		query.get(SE_ID_fromHash, 
-		{
-			success: function(se) 
-			{
-				SE_forBusinessPage= se;
-				initBusinessPage();
-			},
-			error: function(object, error) 
-			{
-				si_log('businessPage.js:: loadSEFromID():: error');
-				$.mobile.changePage('#home_page');
-			}
-		});
-	}
-	else
-	{
-		$.ajax(
-		{
-		    type: 'GET',
-		    url: 'php/getSE_forID.php',
-		    data: {id: SE_ID_fromHash},
-		    dataType: 'json',
-		    complete: function(oXMLHttpRequest, textStatus)
+	    type: 'GET',
+	    url: 'php/getSE_forID.php',
+	    data: {id: SE_ID_fromHash},
+	    dataType: 'json',
+	    complete: function(oXMLHttpRequest, textStatus)
+	    {
+		    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
 		    {
-			    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
-			    {
-			    	var jsonResponse= $.parseJSON(oXMLHttpRequest.responseText);
-					if(jsonResponse != null)
+		    	var jsonResponse= $.parseJSON(oXMLHttpRequest.responseText);
+				if(jsonResponse != null)
+				{
+					SE_forBusinessPage= jsonResponse['SE_forID'];
+					if(SE_forBusinessPage == null || SE_forBusinessPage == undefined)
 					{
-						SE_forBusinessPage= jsonResponse['SE_forID'];
-						if(SE_forBusinessPage == null || SE_forBusinessPage == undefined)
-						{
-							si_log('businessPage.js:: loadSEFromID():: if(SE_forBusinessPage == null || SE_forBusinessPage == undefined)')
-						}
-						initBusinessPage();
+						si_log('businessPage.js:: loadSEFromID():: if(SE_forBusinessPage == null || SE_forBusinessPage == undefined)')
 					}
-					else
-					{
-						si_log('businessPage.js:: loadSEFromID:: if(jsonResponse != null)');
-					}
-					
-					return;
-			    }
-			    else
-			    {
-			    	si_log('businessPage.js:: loadSEFromID():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
-			    }
-			}							   
-		});
-	}	
+					initBusinessPage();
+				}
+				else
+				{
+					si_log('businessPage.js:: loadSEFromID:: if(jsonResponse != null)');
+				}
+				
+				return;
+		    }
+		    else
+		    {
+		    	si_log('businessPage.js:: loadSEFromID():: if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, -1) != const_StringsEqual)');
+		    }
+		}							   
+	});
 }
 
 
@@ -342,11 +258,10 @@ function loadSEFromID()
 
 function makeBackButtonHome(bMakeHome)
 {
-	if(bMakeHome)//bMakeBackHome)
+	if(bMakeHome)
 	{
 		$('#businessPage_Back .ui-btn-text').html('Home');
 		$('#businessPage_Back').attr('href', '#home_page');
-		// bMakeBackHome= false;
 	}
 	else
 	{

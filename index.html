@@ -10,28 +10,30 @@
 	<link rel="stylesheet" href="css/jqm/jquery.mobile-1.2.0.min.css"/>
 	<link rel="stylesheet" href="css/SI.css"/>
 
-	<!-- App Version -->
+	<script src="js/jquery/jquery.1.8.3.min.js"></script>
+	<script src='js/Utility.js'></script>
 	<script>
 		var appVersion= 'v2.0.90';
 
-		var bParse= false;
-		var bDEBUGGING= false;
-		var bPhoneGap= false;
+		var bDEBUGGING= true;
+		var bPhoneGap= true;
+		var bNewPrioritySection= false;
 
 		if(bPhoneGap)
 		{
+			si_log('PHONEGAP ON');
 			var strServerPrefix_forPhonegap= 'http://www.socialimpactapp.com/testingSI/';
 		}
 		if(bDEBUGGING)
 		{
+			si_log('DEBUGGING ON');
 			var nLogIndex= 0;
 		}
-	</script>
+		if(bNewPrioritySection)
+		{
+			si_log('NEW PRIORITY SECTION ON');
+		}
 
-	<!-- JQM Scripts -->
-	<script src="js/jquery/jquery.1.8.3.min.js"></script>
-	<script src='js/Utility.js'></script>
-	<script>
 		if(bPhoneGap)
 		{
 			$.getScript('js/cordova-2.6.0.js');
@@ -86,6 +88,7 @@
 	<script src='js/generalPage.js'></script>	
 	<script src='js/search.js'></script>
 	<script src='js/moreSI_Page.js'></script>
+	<script src='js/primary_page.js'></script>
 	<script src='js/businessPage.js'></script>
 	<script src='js/businessListPage.js'></script>
 	<script src='js/home_page.js'></script>
@@ -101,23 +104,8 @@
 			pageshowGoogleAnalytics();
 		});
 	</script>
-
-<!-- TESTINGS -->
-	<!-- <script src='addParseDB.js'></script> -->
 </head> 
 <body onload='bodyOnLoad()'> 
-
-
-<!-- TESTING -->
-<!-- <div data-role="page"  data-theme='g'>
-	
-	<div data-role="content" id='welcome_content' data-theme='g'>
-		<button onclick='fixDB()'>Fix DB</button>
-	</div>
-
-</div> -->
-
-
 
 <!--  _______________________________#welcomePage ________________________________ -->
 <div data-role="page" id="welcome_page" data-theme='g'>
@@ -137,13 +125,11 @@
 
 
 
-
 <!-- _______________________________#home_page ________________________________-->
 <div data-role="page" id="home_page" data-theme='g'>
 
 	<div data-role="header"  id='home_header'> 
 		<h1>Social Impact App</h1> 	
-		<!-- <a onclick='getUsersGeoLocation()' data-icon='refresh' id='refreshLocationButton'>Refresh Location</a> -->
 	</div>
 
 
@@ -179,8 +165,15 @@
 			<div data-role="collapsible">
 				<h3>Metro Areas</h3>
 				<div class='categoryListContainer'>
-					<ul class='categoryList' id="metroAreasCategoryList" data-role="listview" data-inset="true" data-theme='d'></ul>
+					<ul class='categoryList' id="hp_metroAreasList" data-role="listview" data-inset="true" data-theme='d'></ul>
 				</div>
+				<!-- <h3>Geographic Areas</h3>
+				<div class='categoryListContainer'>
+					<ul class='categoryList' id="metroAreasCategoryList" data-role="listview" data-inset="true" data-theme='d'>
+						<li><a href='#primary_page' onclick='getPrimaryCountries()'>Primary Countries</a></li>
+						<li><a href='#primary_page' onclick='getPrimaryMetroAreas()'>Primary Metro Areas</a></li>
+					</ul>
+				</div> -->
 			</div>
 			
 			<div data-role="collapsible">
@@ -209,6 +202,32 @@
 	</div>
 </div>
 <!--_______________________________ /#home_page _____________________________-->
+
+
+
+
+<!-- _______________________________#primary_page ________________________________-->
+<div data-role="page" id="primary_page" data-theme='g'>
+
+	<div data-role="header" data-position="fixed">
+		<a href='#home_page' data-icon='arrow-l'>Back</a>
+		<div class='searchInput_header' id='searchInputHeader_primary_page'>
+		    <input  type="search" 
+				    data-theme='b' 
+				    data-mini='true' 
+				    name="searchInput" 
+				    id="searchInput_primary_page" 
+				    placeholder="  Search Social Impact"/>
+		</div>
+	</div>
+
+	<div data-role="content" data-theme='g'>			
+		<h3 id='primary_name' style='text-align:center'></h3>
+		<ul class='categoryList' id="pp_metroAreasList" data-role="listview" data-inset="true" data-theme='d'></ul>
+	</div>
+
+</div><!-- /primary_page -->
+
 
 
 

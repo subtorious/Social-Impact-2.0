@@ -12,16 +12,7 @@ $(document).on("pageshow", "#mapPage", function(event, ui)
 		return;
 	}
 
-	var SE_GoogleGeoLocation, SE_GeoLocation;
-	if(bParse)
-	{
-		SE_GeoLocation= SE_forBusinessPage.get('GeoLocation');
-	}
-	else
-	{
-		SE_GeoLocation= new Parse.GeoPoint(SE_forBusinessPage.Latitude, SE_forBusinessPage.Longitude);
-	}
-
+	var SE_GoogleGeoLocation, SE_GeoLocation= new Parse.GeoPoint(SE_forBusinessPage.Latitude, SE_forBusinessPage.Longitude);
 
 	if(SE_GeoLocation != undefined && SE_GeoLocation != null)
 	{

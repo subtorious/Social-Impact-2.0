@@ -53,14 +53,7 @@ $(document).on("pageshow", "#businessListPage", function(event, ui)
 	{
 		$('#searchInput_businessListPage').attr('value', searchString);	
 		showSearching();
-		if(bParse)
-		{
-			searchSI_Database_Parse();
-		}
-		else
-		{
-			searchSI_Database();
-		}
+		searchSI_Database();		
 	}
 
 	setupMap_ListingsPage();
@@ -182,14 +175,8 @@ function displaySE_Listings(aSEs_toDisplay, bOpenInfoWindow)
 	{
 		if(b_NearbyListings)
 		{
-			if(bParse)
-			{
-				aSE_Categories= aSEs_toDisplay[i].get('Categories');
-			}
-			else
-			{
-				aSE_Categories= aSEs_toDisplay[i].Categories.split('"');
-			}
+			aSE_Categories= aSEs_toDisplay[i].Categories.split('"');
+			
 			if(aSE_Categories != undefined && aSE_Categories != null)
 			{
 				if(bDisplayEverthing || ($.inArray(SE_Category, aSE_Categories) > -1))
@@ -208,20 +195,8 @@ function displaySE_Listings(aSEs_toDisplay, bOpenInfoWindow)
 			if(bFirstSEinList)
 			{
 				var seLat, seLong;
-				if(bParse)
-				{
-					var geoLocation= aSEs_toDisplay[i].get('GeoLocation');
-					if(geoLocation != null && geoLocation != undefined)
-					{
-						seLat= geoLocation.latitude;
-						seLong= geoLocation.longitude;
-					}
-				}
-				else
-				{
-					seLat= aSEs_toDisplay[i].Latitude;
-					seLong= aSEs_toDisplay[i].Longitude;
-				}
+				seLat= aSEs_toDisplay[i].Latitude;
+				seLong= aSEs_toDisplay[i].Longitude;				
 
 				if(seLat != null && seLat != undefined && seLong != null && seLong != undefined)
 				{
@@ -233,22 +208,11 @@ function displaySE_Listings(aSEs_toDisplay, bOpenInfoWindow)
 		{
 			listingsHTML+= getListingHTMLForSE(aSEs_toDisplay[i], i, false, bFirstSEinList);
 			var bHasGeoLocation= false;
-			if(bParse)
+			var seLat= aSEs_toDisplay[i].Latitude, seLong= aSEs_toDisplay[i].Longitude;
+			if(seLat != null && seLat != undefined && seLong != null && seLong != undefined)
 			{
-				var geoLocation= aSEs_toDisplay[i].get('GeoLocation');
-				if(geoLocation != null && geoLocation != undefined)
-				{
-					bFirstSEinList= false;
-				}				
-			}
-			else
-			{
-				var seLat= aSEs_toDisplay[i].Latitude, seLong= aSEs_toDisplay[i].Longitude;
-				if(seLat != null && seLat != undefined && seLong != null && seLong != undefined)
-				{
-					bFirstSEinList= false;
-				}	
-			}
+				bFirstSEinList= false;
+			}				
 		}
 	}
 
@@ -270,18 +234,11 @@ function displaySE_Listings(aSEs_toDisplay, bOpenInfoWindow)
 function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMoveToThisLocationOnMap)
 {
 	var bHasGeoLocation= false, SE_GeoLocation;
-	if(bParse)
+	var latitude= SE.Latitude, longitude= SE.Longitude;
+	if(latitude != null && latitude != undefined &&  longitude != null &&  longitude != undefined)
 	{
-		SE_GeoLocation= SE.get('GeoLocation');
-	}
-	else
-	{
-		var latitude= SE.Latitude, longitude= SE.Longitude;
-		if(latitude != null && latitude != undefined &&  longitude != null &&  longitude != undefined)
-		{
-			SE_GeoLocation= new Parse.GeoPoint({latitude: latitude, longitude: longitude});
-		}						
-	}
+		SE_GeoLocation= new Parse.GeoPoint({latitude: latitude, longitude: longitude});
+	}			
 
 	if(SE_GeoLocation != undefined && SE_GeoLocation != null)
 	{
@@ -298,31 +255,13 @@ function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMove
 
 	var listingsHTML= '<li class="businessPageListing"';
 	var seaIconHTML='';
-	var seCategories;
-	if(bParse)
-	{
-		seCategories= SE.get('Categories');
-	}
-	else
-	{
-		seCategories= SE.Categories;
-	}
-
+	var seCategories= SE.Categories;
 	var bSEA= false;
-	if(bParse)
+
+	if(seCategories.indexOf('Social Enterprise Alliance') > -1)
 	{
-		if($.inArray('Social Enterprise Alliance', seCategories) >= 0)
-		{
-			bSEA= true;
-		}
-	}
-	else
-	{
-		if(seCategories.indexOf('Social Enterprise Alliance') > -1)
-		{
-			bSEA= true;
-		}
-	}
+		bSEA= true;
+	}	
 
 	if(bSEA)
 	{
@@ -333,25 +272,7 @@ function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMove
 	listingsHTML+=
 	'><a href="#businessPage" data-transition="none" id="' + listingsID + '">'
 	+ seaIconHTML
-	+ '<h3>';
-	if(bParse)
-	{
-		listingsHTML+= SE.get('Name');
-	}
-	else
-	{
-		listingsHTML+= SE.Name;	
-	}
-	listingsHTML+= '</h3><p>';
-	if(bParse)
-	{
-		listingsHTML+= SE.get('Location');
-	}
-	else
-	{
-		listingsHTML+= SE.Location;	
-	}
-	listingsHTML+= '</p>';
+	+ '<h3>' + SE.Name + '</h3><p>' + SE.Location + '</p>';
 
 	if(SE_GeoLocation != undefined && SE_GeoLocation != null && parse_UserGeoPoint != null && parse_UserGeoPoint != undefined)
 	{

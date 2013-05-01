@@ -41,16 +41,7 @@ function addMapLocationMarker(map_canvas, google_GeoPoint, bIsUserLocation, SE_f
 										        new google.maps.Size(25.0, 43.0),
 										        new google.maps.Point(0, 0),
 										        new google.maps.Point(12.0, 21.0));
-		var seName;
-		if(bParse)
-		{
-			seName= SE_forMapMarker.get('Name');
-		}
-		else
-		{
-			seName= SE_forMapMarker.Name;
-		}
-
+		var seName= SE_forMapMarker.Name;
 		var markerOptions=
 		{
 			'title': seName,
@@ -61,29 +52,11 @@ function addMapLocationMarker(map_canvas, google_GeoPoint, bIsUserLocation, SE_f
 		}
 		var infoHTML=
 		'<div id="mapInfoWindow_name" style="font-size:25px;">' + seName + '</div>'
-		+'<div id="mapInfoWindow_content" style="color:#666;">';
-		if(bParse)
-		{
-			infoHTML+= SE_forMapMarker.get('Location');	
-		} 
-		else
-		{
-			infoHTML+= SE_forMapMarker.Location;	
-		}
-		infoHTML+= '<br/>';
-		  
+		+'<div id="mapInfoWindow_content" style="color:#666;">' + SE_forMapMarker.Location + '<br/>';
 
 		if(parse_UserGeoPoint != null && parse_UserGeoPoint != undefined)
 		{  
-			var seGeoLocation;
-			if(bParse)
-			{
-				seGeoLocation= SE_forMapMarker.get('GeoLocation');
-			}
-			else
-			{
-				seGeoLocation= new Parse.GeoPoint({latitude:SE_forMapMarker.Latitude, longitude:SE_forMapMarker.Longitude});
-			}
+			var seGeoLocation= new Parse.GeoPoint({latitude:SE_forMapMarker.Latitude, longitude:SE_forMapMarker.Longitude});
 
 			if(bInUSorUK)
 			{

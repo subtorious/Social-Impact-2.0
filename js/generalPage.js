@@ -1,8 +1,3 @@
-// $(document).on('pageinit','[data-role=page]', function()
-// {
-//     $('[data-position=fixed]').fixedtoolbar({ tapToggle:false});
-// });
-
 $(window).resize(function() 
 {
 	if(timeout_ResizePage)

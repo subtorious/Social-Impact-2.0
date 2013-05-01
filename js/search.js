@@ -100,13 +100,7 @@ function performSearch(searchInput)
 
 	searchString= $(searchInput).attr('value');
 	bSearching= true;
-	last_searchString= searchString;
-	if(bParse)
-	{
-		lowercase_SearchString= searchString.toLowerCase();
-		titlecase_SearchString= toTitleCase(searchString);	
-		search_firstTry= true;
-	}	
+	last_searchString= searchString;	
 	aSEs_fromSearch= null;	
 	b_SearchListings= true;
 	b_NearbyListings= false;
@@ -118,14 +112,7 @@ function performSearch(searchInput)
 	{
 		showSearching();
 		setupMap_ListingsPage();
-		if(bParse)
-		{
-			searchSI_Database_Parse();
-		}
-		else
-		{
-			searchSI_Database();
-		}
+		searchSI_Database();		
 	}
 	else
 	{
@@ -203,127 +190,6 @@ function searchSI_Database()
 
 
 
-// ----------------------Parse Search--------------------------
-function searchLocation()
-{
-	var SocialEnterpriseClass = Parse.Object.extend("SocialEnterprise");
-	var lowercase_query= new Parse.Query(SocialEnterpriseClass);
-	lowercase_query.contains('Location', lowercase_SearchString);
-	var titlecase_query= new Parse.Query(SocialEnterpriseClass);
-	titlecase_query.contains('Location', titlecase_SearchString);
-	var query= Parse.Query.or(lowercase_query, titlecase_query);
-	query.find(
-	{
-		success: function(results) 
-		{
-			si_log("search.js:: searchLocation:: Successfully retrieved " + results.length + " objects.");
-
-			bSearching= false;
-			if(results.length <= 0)
-			{
-				noResultsForSearch();
-				return;
-			}
-
-			aSEs_fromSearch= results;
-			displaySE_Listings(aSEs_fromSearch, true);
-			showBusinessListPage();
-			return;
-		},
-		error: function(error) 
-		{
-			si_log("search.js:: searchLocation:: Error: " + error.code + " " + error.message);
-			if(search_firstTry)
-			{
-				searchInput= false;
-				searchLocation();
-			}
-			else
-			{
-				troubleReachingDatabase();
-			}
-		}
-	});
-}
-
-
-
-function searchSI_Database_Parse()
-{
-	var SocialEnterpriseClass = Parse.Object.extend("SocialEnterprise");
-
-	var asWritten_query_Name= new Parse.Query(SocialEnterpriseClass);
-	asWritten_query_Name.contains('Name', searchString);
-	var lowercase_query_Name= new Parse.Query(SocialEnterpriseClass);
-	lowercase_query_Name.contains('Name', lowercase_SearchString);
-	var titlecase_query_Name= new Parse.Query(SocialEnterpriseClass);
-	titlecase_query_Name.contains('Name', titlecase_SearchString);
-
-	var asWritten_query_Details= new Parse.Query(SocialEnterpriseClass);
-	asWritten_query_Details.contains('Details', searchString);
-	var lowercase_query_Details= new Parse.Query(SocialEnterpriseClass);
-	lowercase_query_Details.contains('Details', lowercase_SearchString);
-	var titlecase_query_Details= new Parse.Query(SocialEnterpriseClass);
-	titlecase_query_Details.contains('Details', titlecase_SearchString);
-
-	var asWritten_query_SI= new Parse.Query(SocialEnterpriseClass);
-	asWritten_query_SI.contains('SocialImpact', searchString);
-	var lowercase_query_SI= new Parse.Query(SocialEnterpriseClass);
-	lowercase_query_SI.contains('SocialImpact', lowercase_SearchString);
-	var titlecase_query_SI= new Parse.Query(SocialEnterpriseClass);
-	titlecase_query_SI.contains('SocialImpact', titlecase_SearchString);
-
-	var query= Parse.Query.or(  
-
-
-								// asWritten_query_Name,
-								lowercase_query_Name, 
-								titlecase_query_Name,
-								// asWritten_query_Details, 
-								lowercase_query_Details, 
-								titlecase_query_Details, 
-								// asWritten_query_SI,
-								lowercase_query_SI, 
-								titlecase_query_SI);
-	query.limit(50);
-	query.find(
-	{
-		success: function(results) 
-		{
-			si_log("search.js:: searchSI_Database:: Successfully retrieved " + results.length + " objects.");
-
-			bSearching= false;
-			if(results.length <= 0)
-			{
-				noResultsForSearch();
-				return;
-			}
-
-			if(results.length)
-			{
-				results.sort(parseGeoPoint_compareDistanceFrom(parse_UserGeoPoint));
-			}
-			aSEs_fromSearch= results;
-			displaySE_Listings(aSEs_fromSearch, true);
-			showBusinessListPage();			
-		},
-		error: function(error) 
-		{
-			si_log("search.js:: searchSI_Database:: Error: " + error.code + " " + error.message);
-			if(search_firstTry)
-			{
-				searchInput= false;
-				searchSI_Database();
-			}
-			else
-			{
-				troubleReachingDatabase();
-			}
-		}
-	});
-}
-
-
 function noResultsForSearch()
 {
 	aSEs_fromSearch= null;
@@ -339,5 +205,3 @@ function troubleReachingDatabase()
 	show_NoListingsForSearch_Row();
 	showBusinessListPage();
 }
-
-

@@ -25,16 +25,11 @@ $(document).on("pageinit", "#home_page" , function(event)
 	si_log('home_page:: pageinit');
 
 	setupSearch('#home_searchInput', '.searchInputContainer');
-	if(bParse)
-	{
-		getAllMetroAreas_FromParse();
-		getOnline_SEsFromParse();	
-	}
-	else
+	if(!bNewPrioritySection)
 	{
 		getMetroAreas();
-		getShopOnline_Categories();
 	}
+	getShopOnline_Categories();	
 });
 
 
@@ -77,14 +72,7 @@ function getUsersGeoLocation()
 	    		{
 	    			if(bHomePage)
 	    			{
-	    				if(bParse)
-	    				{
-			    			getDefaultLocation();
-			    		}
-			    		else
-			    		{
-			    			getNearby_SEs(null);
-			    		}
+	    				getNearby_SEs(null);			    		
 			    	}
 			    	else
 			    	{
@@ -100,16 +88,7 @@ function getUsersGeoLocation()
 
 		if(bHomePage)
 		{
-			if(bParse)
-			{
-		    	navigator.geolocation.getCurrentPosition(getNearby_SEsFromParse);
-		    }
-		    else
-		    {
-		    	si_log('Before navigator.geolocation.getCurrentPosition(getNearby_SEs, geolocationError);');
-
-		    	navigator.geolocation.getCurrentPosition(getNearby_SEs, geolocationError);	
-		    }
+			navigator.geolocation.getCurrentPosition(getNearby_SEs, geolocationError);			    
 		}
 		else
 		{
@@ -120,14 +99,7 @@ function getUsersGeoLocation()
 	else
 	{
 		si_log('home_page.js:: getUsersGeoLocation():: No GeoLocation');
-		if(bParse)
-		{
-			getDefaultLocation();
-		}
-		else
-		{
-			getNearby_SEs(null);
-		}
+		getNearby_SEs(null);		
     }
 }
 
@@ -140,6 +112,7 @@ function geolocationError(error)
 
 function setDefaultUserLocation()
 {
+	$('#NearbyLabel .ui-btn-text').html('Nearby San Francisco');
 	bDefaultLocationShowing= true;
 	oUserGeoPoint.latitude= 37.799675;
 	oUserGeoPoint.longitude= -122.265196;
@@ -254,7 +227,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 				}
 				else
 				{
-					si_log('indexPage.js:: getSI_Initial_Load_FromParse:: !results');
+					si_log('indexPage.js:: getNearby_SEs:: !results');
 				}
 				return;
 		    }
@@ -263,61 +236,6 @@ function getNearby_SEs(usersCurrentGeoPoint)
 }
 
 
-function getMetroAreas()
-{
-	$.ajax(
-	{
-	    type: 'GET',
-	    url: urlForScript('php/getMetroAreas.php'),
-	    complete: function(oXMLHttpRequest, textStatus)
-	    {
-		    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
-		    {
-		    	var jsonResponse= $.parseJSON(oXMLHttpRequest.responseText);
-				if(jsonResponse != null)
-				{
-					aMetroAreas= jsonResponse['MetroAreas'];
-					if(aMetroAreas == null || aMetroAreas == undefined)
-					{
-						si_log('home_page.js:: getMetroAreas():: if(aMetroAreas == null || aMetroAreas == undefined)')
-					}
-
-					oMetroAreas_GeoLocation= new Object();
-		        	var oMA_GeoLocation, result_GeoLocation;
-		        	var str_name, coords;
-		            for(var i= 0; i < aMetroAreas.length; ++i)
-		            {
-		            	str_name= aMetroAreas[i].Name;
-		            	if(str_name != null && str_name != undefined)
-		            	{
-		            		oMA_GeoLocation= 
-		            		{
-		            			latitude: aMetroAreas[i].Latitude,
-		            			longitude: aMetroAreas[i].Longitude
-		            		}
-		            		if(oMA_GeoLocation != null && oMA_GeoLocation != undefined)
-		            		{
-		            			oMetroAreas_GeoLocation[str_name]= oMA_GeoLocation;
-		            		}            		
-		            	}
-		            	else
-		            	{
-		            		si_log('home_page.js:: getMetroArea_SEsFromParse():: if(str_name == null || str_name == undefined)');
-		            	}
-		            }
-
-					loadMetroAreaList();
-				}
-				else
-				{
-					si_log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
-				}
-				
-				return;
-		    }
-		}							   
-	});
-}
 
 
 function getShopOnline_Categories()
@@ -351,450 +269,6 @@ function getShopOnline_Categories()
 	});
 }
 
-
-// -----------------Parse Functions-------------------
-function getNearby_SEsFromParse(usersCurrentGeoPoint)
-{
-	$.mobile.loading( 'show',
-	{
-		text: 'Finding Nearby Social Enterprises...',
-		textVisible: true,
-		theme: 'a'
-	});
-
-	setUserGeoLocation(usersCurrentGeoPoint);
-	Parse.Cloud.run('getNearby_SEsFromParse', {userGeoLocation: parse_UserGeoPoint, displayRadius: CONST_NEARBY_RADIUS}, 
-	{
-		success: function(results) 
-		{
-			if(results != undefined || results != null)
-			{
-				aSEs_Nearby= results.aNearby_SEs;	
-			    aCategoriesIn_NearbySEs= new Array();
-			    var category;
-			    for(var i= 0; i < results.aCategoriesIn_NearbySEs.length; ++i)
-			    {
-			    	category= results.aCategoriesIn_NearbySEs[i].get('Category');
-			    	if(category != null && category != undefined)
-			    	{
-			    		aCategoriesIn_NearbySEs.push(category);
-			    	}
-			    }
-				loadNearbyCategoriesList_fromParse();
-				showHomePage();
-				if(bDefaultLocationShowing)
-				{
-					$('#hp_MyLocationButton').remove();
-					$('#NearbyLabel .ui-btn-text').html('Nearby');
-				}
-			}
-			else
-			{
-				si_log('home_page.js:: getSI_Initial_Load_FromParse:: !results');
-			}
-		},
-		error: function(error) 
-		{
-			si_log("Error: " + error.code + " " + error.message);
-			if(bGetNearbySEs_FirstTry)
-			{
-				bGetNearbySEs_FirstTry= false;
-				getNearby_SEsFromParse(usersCurrentGeoPoint);
-			}
-			else
-            {
-            	showHomePage();
-            	alert('Social Impact is having trouble accessing its database. Try Refreshing your Browser.')
-            }
-		}
-	});
-}
-
-
-function getDefaultLocation()
-{
-	setDefaultUserLocation();
-
-	var sanFranGeoPoint= parse_UserGeoPoint;
-	if(sanFranGeoPoint == null || sanFranGeoPoint == undefined)
-	{
-		showHomePage();
-		return;
-	}
-	$('#NearbyLabel .ui-btn-text').html('Nearby San Francisco');
-
-	var SE_Class= Parse.Object.extend("SocialEnterprise");
-    var query = new Parse.Query(SE_Class);
-    query.startsWith('MetroArea', 'San Francisco Bay Area');
-    query.withinMiles('GeoLocation', sanFranGeoPoint, 1000); 
-    query.find(
-    {
-        success: function(results)
-        {
-        	aSEs_Nearby= results;
-        	aCategoriesIn_NearbySEs= new Array();
-        	var oCategoriesIn_NearbySEs= new Object(), aCategoriesFromResults;
-        	for(var i= 0; i < results.length; ++i)
-        	{
-        		aCategoriesFromResults= results[i].get('Categories');
-        		if(aCategoriesFromResults != null && aCategoriesFromResults != undefined)
-        		{
-        			var category;
-        			for(var k= 0; k < aCategoriesFromResults.length; ++k)
-        			{
-        				category= aCategoriesFromResults[k];
-        				if(category != null && category != undefined)
-        				{
-        					if((!(category in oCategoriesIn_NearbySEs)))
-	        				{
-	        					oCategoriesIn_NearbySEs[category]= 1;
-	        					aCategoriesIn_NearbySEs.push(category);
-	        				}
-        				}
-        			}
-        		}
-        	}
-     		loadNearbyCategoriesList_fromParse();
-			showHomePage();
-			setTimeout(function()
-			{
-				alert('Showing categories for social enterprises near San Francisco because Social Impact doesn\'t know your current location.');
-			}, 1000);
-        },
-        error: function(error)
-        {
-            si_log("Error: " + error.code + " " + error.message);
-            if(bGetDefaultLocation_FirstTry)
-            {
-            	bGetDefaultLocation_FirstTry= false;
-            	getDefaultLocation();
-            }
-            else
-            {
-            	showHomePage();
-            	alert('Social Impact is having trouble accessing its database. Try Refreshing your Browser.')
-            }
-        }
-    });
-}
-
-
-function loadNearbyCategoriesList_fromParse()
-{
-	if(aCategoriesIn_NearbySEs.length <= 0)
-	{
-		si_log('index.js:: loadNearbyCategoriesList():: if(aCategoriesIn_NearbySEs.length <= 0)');
-		return;
-	}
-	var listHTML= '', listID= '';
-	var oCategoriesWithCounts= new Object(), aCategories;
-	for(var i=0; i < aSEs_Nearby.length; ++i)
-	{
-		aCategories= aSEs_Nearby[i].get('Categories');
-		if(aCategories != null && aCategories != undefined)
-		{
-			var category;
-			for(var k= 0; k < aCategories.length; ++k)
-			{
-				category= aCategories[k];
-				if(category != null && category != undefined)
-				{
-					if(category in oCategoriesWithCounts)
-    				{
-    					oCategoriesWithCounts[category]+= 1;
-    				}
-    				else
-    				{
-    					oCategoriesWithCounts[category]= 1;
-    				}
-				}
-			}
-		}
-	}
-
-	oListID_toCategory= new Object();
-	for (var i=0; i < aCategoriesIn_NearbySEs.length; i++)
-	{
-		listID= aCategoriesIn_NearbySEs[i];
-		listID= listID.replace(/\s/g, "");
-		listID= listID.replace(/&/g, '_');
-		listID= listID.replace(/,/g, '_');
-		oListID_toCategory[listID]= aCategoriesIn_NearbySEs[i];
-
-		listHTML+=  '<li><a id="' + listID + '">' 
-						+ aCategoriesIn_NearbySEs[i]
-						+ '<span class="ui-li-count">' + oCategoriesWithCounts[aCategoriesIn_NearbySEs[i]] + '</span>'
-					+'</a></li>';
-	}	
-	listHTML+= '<li><a id="Everything_ListItem">Everything'
-					+ '<span class="ui-li-count">' + aSEs_Nearby.length + '</span>'
-				+'</a></li>';
-	$('#nearbyCategoryList' ).html(listHTML);
-
-	for (var i=0; i < aCategoriesIn_NearbySEs.length; i++)
-	{
-		listID= aCategoriesIn_NearbySEs[i];
-		listID= listID.replace(/\s/g, "");
-		listID= listID.replace(/&/g, '_');
-		listID= listID.replace(/,/g, '_');
-
-		$( '#' + listID ).on('click', function(event, ui) 
-		{
-			b_NearbyListings= true;
-			b_MetroAreaListings= false;
-			b_SearchListings= false;
-			b_OnlineListings= false;
-			SE_Category= oListID_toCategory[this.id];	
-			$.mobile.changePage('#businessListPage');		
-		});
-	}	
-	$('#Everything_ListItem').on('click', function(event, ui) 
-	{
-		b_NearbyListings= true;
-		b_MetroAreaListings= false;
-		b_SearchListings= false;
-		b_OnlineListings= false;
-		SE_Category= 'Everything';
-		$.mobile.changePage('#businessListPage');				
-	});
-	$('#nearbyCategoryList').listview('refresh');
-}
-
-
-
-function getAllMetroAreas_FromParse()
-{
-	var MetroAreasClass = Parse.Object.extend("MetroAreas");
-    var metroArea_query = new Parse.Query(MetroAreasClass); 
-    metroArea_query.ascending('Name');
-    metroArea_query.find(
-    {
-        success: function(results)
-        {
-        	oMetroAreas_GeoLocation= new Object();
-        	var oMA_GeoLocation, result_GeoLocation;
-        	var str_name, coords;
-            for(var i= 0; i < results.length; ++i)
-            {
-            	str_name= results[i].get('Name');
-            	if(str_name != null && str_name != undefined)
-            	{
-            		aMetroArea_list.push(str_name);
-            		result_GeoLocation= results[i].get('GeoLocation');
-            		if(result_GeoLocation != null && result_GeoLocation != undefined)
-            		{
-            			oMA_GeoLocation= 
-	            		{
-	            			latitude: result_GeoLocation.latitude,
-	            			longitude: result_GeoLocation.longitude
-	            		}
-	            		if(oMA_GeoLocation != null && oMA_GeoLocation != undefined)
-	            		{
-	            			oMetroAreas_GeoLocation[str_name]= oMA_GeoLocation;
-	            		}
-            		}            		
-            	}
-            	else
-            	{
-            		si_log('home_page.js:: getMetroArea_SEsFromParse():: if(str_name == null || str_name == undefined)');
-            	}
-            }
-            loadMetroAreaList_forParse();
-        },
-        error: function(error)
-        {
-            si_log("Error: " + error.code + " " + error.message);
-            if(bGetMetroAreas_FirstTry)
-            {
-            	bGetMetroAreas_FirstTry= false;
-            	getMetroArea_SEsFromParse();
-            }
-        }
-    });
-}
-
-
-
-function getMetroArea_FromParse()
-{
-	var SE_Class= Parse.Object.extend("SocialEnterprise");
-    var query = new Parse.Query(SE_Class);
-    query.ascending('Name');
-    query.startsWith('MetroArea', SE_Category) 
-    query.find(
-    {
-        success: function(results)
-        {
-        	aSEs_MetroArea= results;
-        	$.mobile.changePage('#businessListPage');
-        },
-        error: function(error)
-        {
-            si_log("Error: " + error.code + " " + error.message);
-        }
-    });
-}
-
-function loadMetroAreaList_forParse()
-{
-	if(aMetroArea_list.length <= 0)
-	{
-		si_log('index.js:: loadMetroAreaList():: if(aMetroArea_list.length <= 0)');
-		return;
-	}
-
-	var listHTML= '', listID= '';
-	for(var i=0; i < aMetroArea_list.length; i++)
-	{
-		listID= aMetroArea_list[i] + '_ListItem';
-		listID= listID.replace(/\s/g, "");
-		listID= listID.replace(/&/g, '_');
-		listID= listID.replace(/,/g, '_');
-		listID= listID.replace('/', '_');
-		listHTML+= '<li><a id="' + listID + '">' + aMetroArea_list[i] + "</a></li>";
-	}	
-	$('#metroAreasCategoryList' ).html(listHTML);
-
-	for(var i=0; i < aMetroArea_list.length; i++)
-	{
-		listID= aMetroArea_list[i] + '_ListItem';
-		listID= listID.replace(/\s/g, "");
-		listID= listID.replace(/&/g, '_');
-		listID= listID.replace(/,/g, '_');
-		listID= listID.replace('/', '_');
-		$('#' + listID).on('click', function(event, ui) 
-		{
-			b_MetroAreaListings= true;
-			b_NearbyListings= false;
-			b_SearchListings= false;
-			b_OnlineListings= false;
-			SE_Category= this.innerHTML;
-			getMetroArea_FromParse();				
-		});
-	}	
-	$('#metroAreasCategoryList').listview('refresh');
-}
-
-
-function getOnline_SEsFromParse()
-{
-	var SE_Class = Parse.Object.extend("SocialEnterprise");
-    var query = new Parse.Query(SE_Class);
-    query.equalTo('ShopOnline', true);
-    query.ascending('Name');
-    query.limit(1000);
-    query.find(
-    {
-        success: function(results)
-        {
-        	aAll_ShopOnlineSEs= results;
-        	var aResult_Categories, oOnline_Categories= new Object();
-        	aOnline_Categories= new Array();
-	        var category;
-	        for(var i= 0; i < results.length; ++i)
-	        {
-	            aResult_Categories= results[i].get('Categories');
-	            if(!(aResult_Categories == undefined))
-	            {
-	                for(var k= 0; k < aResult_Categories.length; ++k)
-	                {
-	                    category= aResult_Categories[k];
-	                    if(!(category in oOnline_Categories))
-	                    {
-	                        oOnline_Categories[category]= undefined;
-	                        aOnline_Categories.push(category);
-	                    }
-	                }
-	            }                    
-	        } 
-	        loadShopOnline_CategoryList_forParse();
-        },
-        error: function(error)
-        {
-            si_log("Error: " + error.code + " " + error.message);
-            if(bGetOnlineSEs_FirstTry)
-            {
-            	bGetOnlineSEs_FirstTry= false;
-            	getOnline_SEsFromParse();
-            }
-        }
-    });
-}
-
-function loadShopOnline_CategoryList_forParse()
-{
-	if(aOnline_Categories.length <= 0)
-	{
-		si_log('index.js:: loadShopOnline_CategoryList():: if(aOnline_Categories.length <= 0)');
-		return;
-	}
-
-	var listHTML= '', listID= '';
-	for(var i=0; i < aOnline_Categories.length; i++)
-	{
-		listID= aOnline_Categories[i] + '_ListItem';
-		listID= listID.replace(/\s/g, "");
-		listID= listID.replace(/&/g, '_');
-		listID= listID.replace(/,/g, '_');
-		listHTML+= '<li><a id="' + listID + '">' + aOnline_Categories[i] + "</a></li>";
-	}	
-	listHTML+= '<li><a id="Everything_ShopOnline">Everything</a></li>';
-	$('#onlineCategoryList' ).html(listHTML);
-
-	for(var i=0; i < aOnline_Categories.length; i++)
-	{
-		listID= aOnline_Categories[i] + '_ListItem';
-		listID= listID.replace(/\s/g, "");
-		listID= listID.replace(/&/g, '_');
-		listID= listID.replace(/,/g, '_');
-		$('#' + listID).on('click', function(event, ui) 
-		{
-			b_OnlineListings= true;
-			b_NearbyListings= false;
-			b_MetroAreaListings= false;
-			b_SearchListings= false;
-			SE_Category= this.innerHTML.replace(/&amp;/g, '&');
-			aSEs_Online= new Array();
-			var seCategories, category, se;
-			for(var i= 0; i < aAll_ShopOnlineSEs.length; ++i)
-			{
-				se= aAll_ShopOnlineSEs[i];
-				if(se != null && se != undefined)
-				{
-					seCategories= se.get('Categories');
-					if(seCategories != null && seCategories != undefined && seCategories.length > 0)
-					{
-						for(var k= 0; k < seCategories.length; ++k)
-						{
-							category= seCategories[k];
-							if(category != null && category != undefined)
-							{
-								if(category === SE_Category)
-								{
-									aSEs_Online.push(se);
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-			$.mobile.changePage('#businessListPage');
-		});
-	}	
-	$('#Everything_ShopOnline').on('click', function(event, ui) 
-	{
-		b_OnlineListings= true;
-		b_NearbyListings= false;
-		b_MetroAreaListings= false;
-		b_SearchListings= false;
-		SE_Category= 'Everything';//this.innerHTML.replace(/&amp;/g, '&');
-		aSEs_Online= aAll_ShopOnlineSEs;
-		$.mobile.changePage('#businessListPage');
-	});
-	$('#onlineCategoryList').listview('refresh');
-}
-// ------------------------END Parse Functions------------------------
 
 
 function loadNearbyCategoriesList()
@@ -882,6 +356,63 @@ function loadNearbyCategoriesList()
 
 
 
+function getMetroAreas()
+{
+	$.ajax(
+	{
+	    type: 'GET',
+	    url: urlForScript('php/getMetroAreas.php'),
+	    complete: function(oXMLHttpRequest, textStatus)
+	    {
+		    if(oXMLHttpRequest.status === 200 && strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
+		    {
+		    	var jsonResponse= $.parseJSON(oXMLHttpRequest.responseText);
+				if(jsonResponse != null)
+				{
+					aMetroAreas= jsonResponse['MetroAreas'];
+					if(aMetroAreas == null || aMetroAreas == undefined)
+					{
+						si_log('home_page.js:: getMetroAreas():: if(aMetroAreas == null || aMetroAreas == undefined)')
+					}
+
+					oMetroAreas_GeoLocation= new Object();
+		        	var oMA_GeoLocation, result_GeoLocation;
+		        	var str_name, coords;
+		            for(var i= 0; i < aMetroAreas.length; ++i)
+		            {
+		            	str_name= aMetroAreas[i].Name;
+		            	if(str_name != null && str_name != undefined)
+		            	{
+		            		oMA_GeoLocation= 
+		            		{
+		            			latitude: aMetroAreas[i].Latitude,
+		            			longitude: aMetroAreas[i].Longitude
+		            		}
+		            		if(oMA_GeoLocation != null && oMA_GeoLocation != undefined)
+		            		{
+		            			oMetroAreas_GeoLocation[str_name]= oMA_GeoLocation;
+		            		}            		
+		            	}
+		            	else
+		            	{
+		            		si_log('home_page.js:: getMetroArea:: if(str_name == null || str_name == undefined)');
+		            	}
+		            }
+
+					loadMetroAreaList();
+				}
+				else
+				{
+					si_log('home_page.js:: getMetroAreas:: if(jsonResponse != null)');
+				}
+				
+				return;
+		    }
+		}							   
+	});
+}
+
+
 
 
 function loadMetroAreaList()
@@ -906,7 +437,7 @@ function loadMetroAreaList()
 			+ '<span class="ui-li-count">' + aMetroAreas[i].Count + '</span>'
 		+ "</a></li>";
 	}	
-	$('#metroAreasCategoryList' ).html(listHTML);
+	$('#hp_metroAreasList').html(listHTML);
 
 	for(var i=0; i < aMetroAreas.length; i++)
 	{
@@ -925,7 +456,7 @@ function loadMetroAreaList()
 			getSEs_forMetroArea(this.innerHTML.split('<')[0]);				
 		});
 	}	
-	$('#metroAreasCategoryList').listview('refresh');
+	$('#hp_metroAreasList').listview('refresh');
 }
 
 
