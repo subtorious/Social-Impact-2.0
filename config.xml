@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <widget xmlns = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "com.redroomsoftware.socialimpactapp"
+        version   = "2.0.0">
+
+    <name>Social Impact App</name>
+
+    <description>
+        Global map app finds local and online social enterprises, social ventures and green businesses. Buy from companies that make a difference! 
+    </description>
+
+    <feature name="http://api.phonegap.com/1.0/geolocation"/>
+
+</widget>
