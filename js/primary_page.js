@@ -42,6 +42,8 @@ function primary_backButton_pressed()
 
 function getPrimaryCountries()
 {
+	si_log('getPrimaryCountries');
+
 	bPrimaryMetroArea= false;
 	primary_page_type= const_countries;
 
@@ -75,6 +77,10 @@ function getPrimaryCountries()
 				}
 				
 				return;
+		    }
+		    else
+		    {
+		    	si_log('primary_page.js:: getPrimaryCountries:: oXMLHttpRequest.status === 200 && oXMLHttpRequest.responseText != -1');
 		    }
 		}							   
 	});
