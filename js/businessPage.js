@@ -87,8 +87,7 @@ function populateBusinessPage(SE)
 function populate_bp_section1(SE)
 {
 	var photo= SE.Photo;
-	si_log('Photo= ' + photo);
-	if(photo == undefined || photo == null || photo != '')
+	if(photo == undefined || photo == null || photo == '')
 	{
 		photo= 'Images/SocialImpact_ICON_Image1024.png';
 	}
