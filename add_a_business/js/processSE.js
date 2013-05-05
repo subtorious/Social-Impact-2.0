@@ -25,7 +25,7 @@ var bReadyToSubmit= true,
 	bPhotoAssociated= false,
 	submittedObjectID= null,
 	bGetMetroAreas_FirstTry= true,
-	aMetroAreas= null,
+	aMetroAreas= null, oMetroAreas= new Object(),
 	photoURL;
 
 
@@ -106,6 +106,11 @@ function getMetroAreasFromParse()
 
 function getMetroAreas()
 {
+	if(aMetroAreas != null)
+	{
+		return;
+	}
+
 	$.ajax(
 	{
 	    type: 'GET',
@@ -145,7 +150,7 @@ function loadMetroAreaList()
 	}
 
 	var metroAreaHTML= '';
-	var MA_ID, ma_name, choice_number= 2;
+	var MA_ID, ma_name, choice_number= 1;
 	for(var i=0; i<aMetroAreas.length; ++i)
 	{
 		if(bParse)
@@ -158,13 +163,20 @@ function loadMetroAreaList()
 		}
 		MA_ID= 'MA_' + ma_name.replace("/", "").replace(/\s+/g, '');
 		metroAreaHTML+=
-			'<input type="radio" name="radio-choice" id="'+MA_ID+'" value="choice-'+choice_number+'"  />'
+			'<input type="radio" name="radio-choice" id="'+MA_ID+'" value="choice-'+choice_number+'" />'
 			+'<label for="'+MA_ID+'">'+ma_name+'</label>';
 		++choice_number;
+
+		oMetroAreas[MA_ID]= ma_name;
 	}
 
 	$('#MetroAreas_List').append(metroAreaHTML);
 	$('#MetroArea_fieldcontain').trigger('create');
+
+	// for(a in oMetroAreas)
+	// {
+	// 	console.log(a + ' : ' + oMetroAreas[a]);
+	// }
 }
 
 
@@ -387,7 +399,7 @@ function checkAndStoreRequiredFields()
 		ContactEmail= $('#ContactEmail').attr('value'); 
 	}
 
-	if($('#Name').attr('value') == '' || $('#Name').attr('value').length > 30)
+	if($('#Name').attr('value') == '')
 	{
 		$('#NameLabel').css('color', '#f00');
 		bReadyToSubmit= false;
@@ -483,29 +495,35 @@ function checkAndStoreRequiredFields()
 
 function setSelectedMetroArea()
 {
-	if($("#metroarea_none").is(":checked"))
+	$("input[name*=radio-choice]:checked").each(function() 
 	{
-		MetroArea= '';
-	}
+        // alert($(this).attr('id'));
+        MetroArea= oMetroAreas[$(this).attr('id')];
+    });
 
-	var MA_ID, ma_name, choice_number= 2;
-	for(var i=0; i<aMetroAreas.length; ++i)
-	{
-		if(bParse)
-		{
-			ma_name= aMetroAreas[i].get('Name');
-		}
-		else
-		{
-			ma_name= aMetroAreas[i];
-		}
-		MA_ID= '#MA_' + ma_name.replace('/', '').replace(/\s+/g, '');
-		if($(MA_ID).is(":checked"))
-		{
-			MetroArea= ma_name;
-			break;
-		}
-	}
+	// return;
+
+	// var MA_ID, ma_name, choice_number= 2;
+	// for(var i=0; i<aMetroAreas.length; ++i)
+	// {
+	// 	if(bParse)
+	// 	{
+	// 		ma_name= aMetroAreas[i].get('Name');
+	// 	}
+	// 	else
+	// 	{
+	// 		ma_name= aMetroAreas[i];
+	// 	}
+	// 	MA_ID= '#MA_' + ma_name.replace('/', '').replace(/\s+/g, '');
+
+	// 	if($(MA_ID).is(":checked"))
+	// 	{
+	// 		console.log(MA_ID + ' CHECKED');
+
+	// 		MetroArea= ma_name;
+	// 		break;
+	// 	}
+	// }
 }
 
 
@@ -710,7 +728,7 @@ function submitSE()
 	    {
 		    if(oXMLHttpRequest.status === 200)
 		    {
-		    	if(strcmp(oXMLHttpRequest.responseText, '-1') != const_StringsEqual)
+		    	if(oXMLHttpRequest.responseText != -1)
 		    	{
 		    		bSE_SuccessfullySubmitted= true;
 		    		$.mobile.changePage('#Payment_Page');

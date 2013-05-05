@@ -20,6 +20,10 @@ function setMapToGeoPoint(map_canvas, google_geoPoint, bSE_Map_Page)
 	{
 		zoom_level= 9;
 	}
+	else if(primary_page_type == const_countries)
+	{
+		zoom_level= selected_primary_country.ZoomLevel;
+	}
 	$(map_canvas).gmap('option', 'zoom', zoom_level);
 	bMapLoaded= true;
 }

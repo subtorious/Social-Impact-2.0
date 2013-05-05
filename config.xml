@@ -2,7 +2,7 @@
     <widget xmlns = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.redroomsoftware.socialimpactapp"
-        version   = "2.0.0">
+        version   = "2.0.93">
 
     <name>Social Impact App</name>
 

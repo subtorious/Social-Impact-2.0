@@ -22,6 +22,14 @@
 	font-size:24px !important;
 }
 
+/*----------------General---------------------------*/
+.insetCentered
+{
+	text-align: center;
+	box-shadow:0px 0px 10px #000 inset;
+}
+/*----------------END General---------------------------*/
+
 /*--------------- welcomePage -----------------------*/
 #versionLabelWelcomePage
 {
@@ -148,11 +156,11 @@
 
 
 /*------------------BusinessPage------------*/
-#businessName_li
+/*#businessName_li
 {
 	text-align: center;
 	box-shadow:0px 0px 10px #000 inset;
-}
+}*/
 
 #bp_section1
 {

@@ -252,6 +252,15 @@ function pointInUSorUK(lat, lng)
 }
 
 
+function si_debug_log(msg)
+{
+	if(bDEBUGGING)
+	{
+		si_log(msg);
+	}
+}
+
+
 function si_log(msg)
 {
 	if(!ie)

@@ -12,7 +12,7 @@ var bGetMetroAreas_FirstTry= true,
 
 $(document).on("pagecreate", "#home_page" , function(event) 
 {
-	si_log('home_page:: pagecreate');
+	si_debug_log('home_page:: pagecreate');
 
 	hideHomePage();
 	Parse.initialize("Pb8MFFgzdpyNeKUuRiekCDrDD9ele3wyU603Ik9s", "AgYzrVA0QXaqXcWYfmmxGgTMoDlt3PRPHamDQJR2");
@@ -22,7 +22,7 @@ $(document).on("pagecreate", "#home_page" , function(event)
 
 $(document).on("pageinit", "#home_page" , function(event) 
 {	
-	si_log('home_page:: pageinit');
+	si_debug_log('home_page:: pageinit');
 
 	setupSearch('#home_searchInput', '.searchInputContainer');
 	if(!bNewPrioritySection)
@@ -35,7 +35,7 @@ $(document).on("pageinit", "#home_page" , function(event)
 
 $(document).on('pageshow', '#home_page', function(event, ui)
 {
-	si_log('home_page:: pageshow');
+	si_debug_log('home_page:: pageshow');
 
 	if(!aSEs_Nearby)
 	{
@@ -55,7 +55,7 @@ $(document).on('pageshow', '#home_page', function(event, ui)
 
 function getUsersGeoLocation()
 {
-	si_log('home_page:: getUsersGeoLocation');
+	si_debug_log('home_page:: getUsersGeoLocation');
 	if(navigator.geolocation)
     {
     	var bHomePage= false;
@@ -92,7 +92,7 @@ function getUsersGeoLocation()
 		}
 		else
 		{
-			si_log('!bHomepage');
+			si_debug_log('!bHomepage');
 			navigator.geolocation.getCurrentPosition(setUserGeoLocation);
 		}
     }
@@ -145,7 +145,7 @@ function setUserGeoLocation(usersCurrentGeoPoint)
 
 function getNearby_SEs(usersCurrentGeoPoint)
 {
-	si_log('home_page:: getNearby_SEs');
+	si_debug_log('home_page:: getNearby_SEs');
 
 	$.mobile.loading( 'show',
 	{
@@ -168,7 +168,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 	    dataType: 'json',
 	    complete: function(oXMLHttpRequest, textStatus)
 	    {
-	    	si_log('home_page:: getNearby_SEs:: complete');
+	    	si_debug_log('home_page:: getNearby_SEs:: complete');
 
 		    if(oXMLHttpRequest.status === 200)
 		    {
@@ -453,6 +453,7 @@ function loadMetroAreaList()
 			b_SearchListings= false;
 			b_OnlineListings= false;
 			SE_Category= this.innerHTML.split('<')[0];
+			selected_metroArea= SE_Category;
 			getSEs_forMetroArea(this.innerHTML.split('<')[0]);				
 		});
 	}	

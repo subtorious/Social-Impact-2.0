@@ -13,16 +13,16 @@
 	<script src="js/jquery/jquery.1.8.3.min.js"></script>
 	<script src='js/Utility.js'></script>
 	<script>
-		var appVersion= 'v2.0.90';
+		var appVersion= 'v2.0.93';
 
 		var bDEBUGGING= true;
 		var bPhoneGap= true;
-		var bNewPrioritySection= false;
+		var bNewPrioritySection= true;
 
 		if(bPhoneGap)
 		{
 			si_log('PHONEGAP ON');
-			var strServerPrefix_forPhonegap= 'http://www.socialimpactapp.com/testingSI/';
+			var strServerPrefix_forPhonegap= 'http://www.socialimpactapp.com/';
 		}
 		if(bDEBUGGING)
 		{
@@ -42,12 +42,12 @@
 
 			function doInit() 
 	        {
-	        	si_log('doInit');
+	        	si_debug_log('doInit');
 	        }
 
 	        function deviceReady() 
 	        {
-	        	si_log('deviceReady');
+	        	si_debug_log('deviceReady');
 	            dd.resolve();
 	        }
 
@@ -55,7 +55,7 @@
 
 	        $(document).on('mobileinit', function () 
 	        {
-	        	si_log('mobileinit');
+	        	si_debug_log('mobileinit');
 				$.support.cors = true;
 				$.mobile.allowCrossDomainPages= true;
 				jqd.resolve();							
@@ -65,7 +65,7 @@
 
 	    function bodyOnLoad()
         {
-        	si_log('bodyOnLoad()');
+        	si_debug_log('bodyOnLoad()');
         	if(bPhoneGap)
         	{
         		document.addEventListener('deviceready', deviceReady(), true);
@@ -163,17 +163,17 @@
 			</div>
 
 			<div data-role="collapsible">
-				<h3>Metro Areas</h3>
+				<!-- <h3>Metro Areas</h3>
 				<div class='categoryListContainer'>
 					<ul class='categoryList' id="hp_metroAreasList" data-role="listview" data-inset="true" data-theme='d'></ul>
-				</div>
-				<!-- <h3>Geographic Areas</h3>
+				</div> -->
+				<h3>Geographic Areas</h3>
 				<div class='categoryListContainer'>
 					<ul class='categoryList' id="metroAreasCategoryList" data-role="listview" data-inset="true" data-theme='d'>
 						<li><a href='#primary_page' onclick='getPrimaryCountries()'>Primary Countries</a></li>
 						<li><a href='#primary_page' onclick='getPrimaryMetroAreas()'>Primary Metro Areas</a></li>
 					</ul>
-				</div> -->
+				</div>
 			</div>
 			
 			<div data-role="collapsible">
@@ -210,7 +210,7 @@
 <div data-role="page" id="primary_page" data-theme='g'>
 
 	<div data-role="header" data-position="fixed">
-		<a href='#home_page' data-icon='arrow-l'>Back</a>
+		<a onclick='primary_backButton_pressed()' data-icon='arrow-l'>Back</a>
 		<div class='searchInput_header' id='searchInputHeader_primary_page'>
 		    <input  type="search" 
 				    data-theme='b' 
@@ -221,8 +221,13 @@
 		</div>
 	</div>
 
-	<div data-role="content" data-theme='g'>			
-		<h3 id='primary_name' style='text-align:center'></h3>
+	<div data-role="content" data-theme='g'>	
+		<ul data-role="listview" data-inset='true'>
+			<li class='insetCentered'>
+				<h3 id='primary_name'></h3>
+				<h4 id='primary_category'></h4>
+			</li>
+		</ul>	
 		<ul class='categoryList' id="pp_metroAreasList" data-role="listview" data-inset="true" data-theme='d'></ul>
 	</div>
 
@@ -235,7 +240,7 @@
 <div data-role="page" id="businessListPage" data-theme='g'> 
 
 	<div data-role="header" id='businessListPageHeader'data-position="fixed">
-		<a href='#home_page' data-icon='arrow-l' id='businessListPage_Back'>Home</a>
+		<a onclick='businessListPage_BackPressed()' data-icon='arrow-l'>Back</a>
 		<div class='searchInput_header' id='blp_searchInputHeader'>
 		    <input  type="search" 
 				    data-theme='b' 
@@ -289,7 +294,7 @@
 
 	<div data-role="content" id='businessPageContent' data-theme='g'>	
 		<ul data-role="listview" id='businessName_listview' data-inset='true'>
-			<li id='businessName_li' class='businessPage_li'></li>
+			<li id='businessName_li' class='businessPage_li insetCentered'></li>
 		</ul>
 		<div id='bp_section1'><ul data-role="listview" id='bp_section1_ul' ></ul></div>
 		<div data-role="controlgroup" id='bp_section2' data-theme='d'></div>		
