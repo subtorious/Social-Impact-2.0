@@ -12,8 +12,6 @@ var bGetMetroAreas_FirstTry= true,
 
 $(document).on("pagecreate", "#home_page" , function(event) 
 {
-	si_debug_log('home_page:: pagecreate');
-
 	hideHomePage();
 	Parse.initialize("Pb8MFFgzdpyNeKUuRiekCDrDD9ele3wyU603Ik9s", "AgYzrVA0QXaqXcWYfmmxGgTMoDlt3PRPHamDQJR2");
 	$('#home_page #versionLabel').html(appVersion);
@@ -22,8 +20,6 @@ $(document).on("pagecreate", "#home_page" , function(event)
 
 $(document).on("pageinit", "#home_page" , function(event) 
 {	
-	si_debug_log('home_page:: pageinit');
-
 	setupSearch('#home_searchInput', '.searchInputContainer');
 	if(!bNewPrioritySection)
 	{
@@ -35,8 +31,6 @@ $(document).on("pageinit", "#home_page" , function(event)
 
 $(document).on('pageshow', '#home_page', function(event, ui)
 {
-	si_debug_log('home_page:: pageshow');
-
 	if(!aSEs_Nearby)
 	{
 		$.mobile.loading('show',
@@ -55,7 +49,6 @@ $(document).on('pageshow', '#home_page', function(event, ui)
 
 function getUsersGeoLocation()
 {
-	si_debug_log('home_page:: getUsersGeoLocation');
 	if(navigator.geolocation)
     {
     	var bHomePage= false;
@@ -92,7 +85,6 @@ function getUsersGeoLocation()
 		}
 		else
 		{
-			si_debug_log('!bHomepage');
 			navigator.geolocation.getCurrentPosition(setUserGeoLocation);
 		}
     }
@@ -112,7 +104,7 @@ function geolocationError(error)
 
 function setDefaultUserLocation()
 {
-	$('#NearbyLabel .ui-btn-text').html('Nearby San Francisco');
+	$('#hp_NearbyLabel .ui-btn-text').html('Nearby San Francisco');
 	bDefaultLocationShowing= true;
 	oUserGeoPoint.latitude= 37.799675;
 	oUserGeoPoint.longitude= -122.265196;
@@ -134,6 +126,7 @@ function setUserGeoLocation(usersCurrentGeoPoint)
 		return;
 	}	
 
+	$('#hp_NearbyLabel .ui-btn-text').html('Nearby');
 	oUserGeoPoint.latitude= usersCurrentGeoPoint.coords.latitude;
 	oUserGeoPoint.longitude= usersCurrentGeoPoint.coords.longitude;
 	google_UserGeoPoint= new google.maps.LatLng(oUserGeoPoint.latitude, oUserGeoPoint.longitude);
@@ -145,8 +138,6 @@ function setUserGeoLocation(usersCurrentGeoPoint)
 
 function getNearby_SEs(usersCurrentGeoPoint)
 {
-	si_debug_log('home_page:: getNearby_SEs');
-
 	$.mobile.loading( 'show',
 	{
 		text: 'Finding Nearby Social Enterprises...',
@@ -221,8 +212,7 @@ function getNearby_SEs(usersCurrentGeoPoint)
 					showHomePage();
 					if(bDefaultLocationShowing)
 					{
-						$('#hp_MyLocationButton').remove();
-						$('#NearbyLabel .ui-btn-text').html('Nearby');
+						alert('Showing Nearby San Francisco because we don\'t know your current location. Change your settings to allow Social Impact App to have access to your geolocation to fix this.');
 					}
 				}
 				else

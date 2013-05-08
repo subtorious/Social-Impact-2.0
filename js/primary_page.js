@@ -42,7 +42,7 @@ function primary_backButton_pressed()
 
 function getPrimaryCountries()
 {
-	si_log('getPrimaryCountries');
+	si_debug_log('getPrimaryCountries');
 
 	bPrimaryMetroArea= false;
 	primary_page_type= const_countries;
