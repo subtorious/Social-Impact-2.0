@@ -16,7 +16,7 @@
 		var appVersion= 'v2.0.97';
 
 		var bDEBUGGING= false;
-		var bPhoneGap= true;
+		var bPhoneGap= false;
 
 		if(bPhoneGap)
 		{
@@ -31,39 +31,13 @@
 		if(bPhoneGap)
 		{
 			$.getScript('js/cordova-2.7.0.js');
-			// var dd = $.Deferred();
-	        // var jqd = $.Deferred();
-
-			// function doInit() 
-	  //       {
-	  //       	si_debug_log('doInit');
-	  //       }
-
-	  //       function deviceReady() 
-	  //       {
-	  //       	si_debug_log('deviceReady');
-	  //           dd.resolve();
-	  //       }
-
-	        // $.when(dd, jqd).done(doInit);
-
 	        $(document).on('mobileinit', function () 
 	        {
 	        	si_debug_log('mobileinit');
 				$.support.cors = true;
 				$.mobile.allowCrossDomainPages= true;
-				// jqd.resolve();		
 	        });  		
 	    }
-
-	    // function bodyOnLoad()
-     //    {
-     //    	si_debug_log('bodyOnLoad()');
-     //    	if(bPhoneGap)
-     //    	{
-     //    		document.addEventListener('deviceready', deviceReady(), true);
-     //    	}
-     //    }  
     </script>
     <script src="js/jquery/jquery.mobile-1.2.0.min.js"></script>
 	
@@ -98,7 +72,7 @@
 		});
 	</script>
 </head> 
-<body> <!-- onload='bodyOnLoad()'>  -->
+<body>
 
 <!--  _______________________________#welcomePage ________________________________ -->
 <div data-role="page" id="welcome_page" data-theme='g'>
@@ -197,7 +171,7 @@
 <!-- _______________________________#primary_page ________________________________-->
 <div data-role="page" id="primary_page" data-theme='g'>
 
-	<div data-role="header" data-position="fixed">
+	<div data-role="header" data-position="fixed"> 
 		<a onclick='primary_backButton_pressed()' data-icon='arrow-l'>Back</a>
 		<div class='searchInput_header' id='searchInputHeader_primary_page'>
 		    <input  type="search" 
@@ -227,7 +201,7 @@
 <!-- _______________________________#businessListPage ________________________________-->
 <div data-role="page" id="businessListPage" data-theme='g'> 
 
-	<div data-role="header" id='businessListPageHeader'data-position="fixed">
+	<div data-role="header" id='businessListPageHeader' data-position="fixed">
 		<a onclick='businessListPage_BackPressed()' data-icon='arrow-l'>Back</a>
 		<div class='searchInput_header' id='blp_searchInputHeader'>
 		    <input  type="search" 
