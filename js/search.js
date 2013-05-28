@@ -170,7 +170,7 @@ function searchSI_Database()
 						aSEs_fromSearch.sort(searchCompare());
 
 						displaySE_Listings(aSEs_fromSearch, true);
-						showBusinessListPage();	
+						blp_searchComplete();	
 					}
 					else
 					{
@@ -195,7 +195,7 @@ function noResultsForSearch()
 	aSEs_fromSearch= null;
 	show_NoListingsForSearch_Row();
 	setMapToGeoPoint('#bp_map_canvas', google_UserGeoPoint);
-	showBusinessListPage();
+	blp_searchComplete();
 }
 
 
@@ -203,5 +203,5 @@ function troubleReachingDatabase()
 {
 	aSEs_fromSearch= null;
 	show_NoListingsForSearch_Row();
-	showBusinessListPage();
+	blp_searchComplete();
 }

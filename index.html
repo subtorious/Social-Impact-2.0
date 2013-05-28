@@ -13,11 +13,10 @@
 	<script src="js/jquery/jquery.1.8.3.min.js"></script>
 	<script src='js/Utility.js'></script>
 	<script>
-		var appVersion= 'v2.0.94';
+		var appVersion= 'v2.0.97';
 
 		var bDEBUGGING= false;
-		var bPhoneGap= true;
-		var bNewPrioritySection= true;
+		var bPhoneGap= false;
 
 		if(bPhoneGap)
 		{
@@ -29,11 +28,6 @@
 			si_log('DEBUGGING ON');
 			var nLogIndex= 0;
 		}
-		if(bNewPrioritySection)
-		{
-			si_log('NEW PRIORITY SECTION ON');
-		}
-
 		if(bPhoneGap)
 		{
 			$.getScript('js/cordova-2.7.0.js');
@@ -58,8 +52,7 @@
 	        	si_debug_log('mobileinit');
 				$.support.cors = true;
 				$.mobile.allowCrossDomainPages= true;
-				jqd.resolve();							
-				
+				jqd.resolve();		
 	        });  		
 	    }
 
@@ -110,7 +103,7 @@
 <!--  _______________________________#welcomePage ________________________________ -->
 <div data-role="page" id="welcome_page" data-theme='g'>
 	
-	<div data-role="header"> <!-- data-position="fixed"> --> 
+	<div data-role="header"> 
 		<h1>Social Impact App</h1> 	
 	</div>
 
@@ -135,7 +128,7 @@
 
 	<div data-role="content" id='home_content' data-theme='g'>
 
-		<h1 id='home_tagLine'>Find social change businesses near you.</h1>
+		<h1 id='home_tagLine'>Find social purpose businesses near you.</h1>
 
 		<div data-role="collapsible-set" class='collapsible_nav'>
 			<ul data-role="listview" data-inset="true" id='home_search_ul' >
@@ -163,10 +156,6 @@
 			</div>
 
 			<div data-role="collapsible">
-				<!-- <h3>Metro Areas</h3>
-				<div class='categoryListContainer'>
-					<ul class='categoryList' id="hp_metroAreasList" data-role="listview" data-inset="true" data-theme='d'></ul>
-				</div> -->
 				<h3>Geographic Areas</h3>
 				<div class='categoryListContainer'>
 					<ul class='categoryList' id="metroAreasCategoryList" data-role="listview" data-inset="true" data-theme='d'>
@@ -190,13 +179,12 @@
 				<ul class='categoryList' id="AboutUsCategoryList" data-role="listview" data-inset="true" data-theme='d'>
 					<li><a href='#aboutThisAppPage' data-transition='none'>About This App</a></li>
 					<li><a href='#ackPage'data-transition='none'>Acknowledgments</a></li>
-					<li><a href='http://socialimpactapp.com/add_a_business'data-transition='none'>Add A Business</a></li>
+					<li><a onclick='addABusinessClicked()'>Add A Business</a></li>
 				</ul>
 			</div>
 		</div>
 		<div style='font-size:14px'>
-			Please 'like' us on Facebook at <a href='http://www.Facebook.com/socialimpactapp' target='_blank'>www.Facebook.com/socialimpactapp</a>.  Thanks!<br/><br/>
-			If you encounter a problem, try refreshing the page. To report a bug, please email me at <a href='mailto:mark@redroomsoftware.com'>mark@redroomsoftware.com</a> .
+			Please 'like' us on Facebook at <a href='http://www.Facebook.com/socialimpactapp' target='_blank'>www.Facebook.com/socialimpactapp</a>.  Thanks!
 		</div><br/>
 		<div id='versionLabel'></div>
 	</div>
@@ -260,13 +248,6 @@
 				<img src='Images/2Lines.png' id='blp_2LinesImage'/>
 			</li>
 		</ul>
-
-		<div data-role="popup" id="searchPopup_businessListPage" data-position-to='#searchInput_businessListPage' data-theme='d'>
-			<ul data-role='listview' data-inset='true' data-theme='d'>
-				<li onclick='searchLocationSelected()' style='cursor:pointer'>Search Address, City, State or Postal Code</li>
-				<li onclick='searchSI_DatabaseSelected()' style='cursor:pointer'>Search SI Database</li>
-			</ul>
-		</div>
 	</div><!-- /content --> 
 
 </div>
@@ -290,7 +271,7 @@
 				    id="searchInput_businessPage" 
 				    placeholder="  Search Social Impact"/>
 		</div>
-	</div><!-- /header -->
+	</div>
 
 	<div data-role="content" id='businessPageContent' data-theme='g'>	
 		<ul data-role="listview" id='businessName_listview' data-inset='true'>
@@ -298,8 +279,6 @@
 		</ul>
 		<div id='bp_section1'><ul data-role="listview" id='bp_section1_ul' ></ul></div>
 		<div data-role="controlgroup" id='bp_section2' data-theme='d'></div>		
-		<!-- <div data-role='button' id='businessPage_shareButton' data-theme='d'>Share</div> -->
-
 		<div data-role="popup" id="searchPopup_businessPage" data-position-to='#searchInput_businessPage' data-theme='d'>
 			<ul data-role='listview' data-inset='true' data-theme='d'>
 				<li onclick='searchLocationSelected()' style='cursor:pointer'>Search Address, City, State or Postal Code</li>
@@ -307,7 +286,7 @@
 			</ul>
 		</div>
 
-	</div><!-- /content -->
+	</div>
 
 </div><!-- /businessPage -->
 
@@ -355,12 +334,6 @@
 	</div>
 	<div data-role="content" id='mp_content'>
 		<div id='mp_map_canvas'></div>
-		<div data-role="popup" id="mp_searchPopup" data-position-to='#mp_searchInput' data-theme='d'>
-			<ul data-role='listview' data-inset='true' data-theme='d'>
-				<li onclick='searchLocationSelected()' style='cursor:pointer'>Search Address, City, State or Postal Code</li>
-				<li onclick='searchSI_DatabaseSelected()' style='cursor:pointer'>Search SI Database</li>
-			</ul>
-		</div>
 	</div> 
 </div>
 <!--________________________________ /mapPage __________________________-->

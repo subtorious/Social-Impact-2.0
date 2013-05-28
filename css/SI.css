@@ -9,7 +9,8 @@
 	max-width: 800px !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    font-family: 'Georgia'
+    font-family: 'Georgia';
+    background: #502970;
 }
 .ui-content
 {

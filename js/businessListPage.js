@@ -51,6 +51,7 @@ $(document).on('pageinit', '#businessListPage', function(event, ui)
 
 $(document).on('pagebeforeshow', '#businessListPage', function(event, ui)
 {
+  	hideBusinessListPage();
 	bCameFromPrimaryPage= false;
 });
 
@@ -63,6 +64,15 @@ $(document).on("pageshow", "#businessListPage", function(event, ui)
 		showSearching();
 		searchSI_Database();		
 	}
+	else
+	{
+		$.mobile.loading('show',
+		{
+			text: '',
+			textVisible: true,
+			theme: 'a'
+		});
+	}
 
 	setupMap_ListingsPage();
 	pageshowGoogleAnalytics();
@@ -72,11 +82,13 @@ $(document).on("pageshow", "#businessListPage", function(event, ui)
 		bGoToLastScrollPos= false;
 		$.mobile.silentScroll(lastScrollPos);
 	}
+	setTimeout(function(){showBusinessListPage()},1000);
 });
 
 
 $(document).on('pagebeforehide', '#businessListPage', function(e)
 {
+	hideBusinessListPage();
 	lastScrollPos= $(window).scrollTop();
 });
 
@@ -375,14 +387,24 @@ function showBusinessListPage()
 {
 	$.mobile.loading('hide');
 	$('#businessListPage_content').css('visibility', 'visible');
+}
+
+function blp_searchComplete()
+{
+	showBusinessListPage();
 	setListingsButtonTo_UpPos();
+}
+
+function hideBusinessListPage()
+{
+	$('#businessListPage_content').css('visibility', 'hidden');
 }
 
 function showSearching()
 {
 	if(bSearching)
 	{
-		$('#businessListPage_content').css('visibility', 'hidden');
+		hideBusinessListPage();
 		$.mobile.loading( 'show',
 		{
 			text: 'Searching...',

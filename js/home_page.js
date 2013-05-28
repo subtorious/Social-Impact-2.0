@@ -20,11 +20,28 @@ $(document).on("pagecreate", "#home_page" , function(event)
 
 $(document).on("pageinit", "#home_page" , function(event) 
 {	
-	setupSearch('#home_searchInput', '.searchInputContainer');
-	if(!bNewPrioritySection)
+	$.getJSON('worldcities.json', function(data) 
 	{
-		getMetroAreas();
-	}
+		data= data.results;
+		dataLength= data.length;
+
+		var nCities= 0;
+		for(var i=0; i < dataLength; ++i)
+		{
+			if(data[i].Population != " ")
+			{
+				if(parseInt(data[i].Population) > 100000)
+				{
+					++nCities;
+				}
+			}
+		}
+		console.log('json cities count= ' + nCities);
+	});
+
+
+
+	setupSearch('#home_searchInput', '.searchInputContainer');
 	getShopOnline_Categories();	
 });
 
@@ -612,6 +629,19 @@ function showHomePage()
 {
 	$.mobile.loading( 'hide' );
 	$('#home_content').css('visibility', 'visible');
+}
+
+
+function addABusinessClicked()
+{
+	if(ie)
+	{
+		alert('Social Impact\'s Add A Business feature does not support Internet Explorer. Please try again using another browser.');
+	}
+	else
+	{
+		window.location.href= 'http://socialimpactapp.com/add_a_business';
+	}
 }
 
 
