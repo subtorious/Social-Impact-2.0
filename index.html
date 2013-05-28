@@ -16,7 +16,7 @@
 		var appVersion= 'v2.0.97';
 
 		var bDEBUGGING= false;
-		var bPhoneGap= false;
+		var bPhoneGap= true;
 
 		if(bPhoneGap)
 		{
@@ -31,39 +31,39 @@
 		if(bPhoneGap)
 		{
 			$.getScript('js/cordova-2.7.0.js');
-			var dd = $.Deferred();
-	        var jqd = $.Deferred();
+			// var dd = $.Deferred();
+	        // var jqd = $.Deferred();
 
-			function doInit() 
-	        {
-	        	si_debug_log('doInit');
-	        }
+			// function doInit() 
+	  //       {
+	  //       	si_debug_log('doInit');
+	  //       }
 
-	        function deviceReady() 
-	        {
-	        	si_debug_log('deviceReady');
-	            dd.resolve();
-	        }
+	  //       function deviceReady() 
+	  //       {
+	  //       	si_debug_log('deviceReady');
+	  //           dd.resolve();
+	  //       }
 
-	        $.when(dd, jqd).done(doInit);
+	        // $.when(dd, jqd).done(doInit);
 
 	        $(document).on('mobileinit', function () 
 	        {
 	        	si_debug_log('mobileinit');
 				$.support.cors = true;
 				$.mobile.allowCrossDomainPages= true;
-				jqd.resolve();		
+				// jqd.resolve();		
 	        });  		
 	    }
 
-	    function bodyOnLoad()
-        {
-        	si_debug_log('bodyOnLoad()');
-        	if(bPhoneGap)
-        	{
-        		document.addEventListener('deviceready', deviceReady(), true);
-        	}
-        }  
+	    // function bodyOnLoad()
+     //    {
+     //    	si_debug_log('bodyOnLoad()');
+     //    	if(bPhoneGap)
+     //    	{
+     //    		document.addEventListener('deviceready', deviceReady(), true);
+     //    	}
+     //    }  
     </script>
     <script src="js/jquery/jquery.mobile-1.2.0.min.js"></script>
 	
@@ -98,7 +98,7 @@
 		});
 	</script>
 </head> 
-<body onload='bodyOnLoad()'> 
+<body> <!-- onload='bodyOnLoad()'>  -->
 
 <!--  _______________________________#welcomePage ________________________________ -->
 <div data-role="page" id="welcome_page" data-theme='g'>
