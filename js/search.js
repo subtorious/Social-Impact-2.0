@@ -133,12 +133,10 @@ function searchSI_Database()
 	    dataType: 'json',
 	    complete: function(oXMLHttpRequest, textStatus)
 	    {
-	    	bSearching= false;
 		    if(oXMLHttpRequest.status === 200)
 		    {
 		    	if(strcmp(oXMLHttpRequest.responseText, '-1') === const_StringsEqual)
 		    	{
-		    		si_log('No results');
 		    		noResultsForSearch();
 		    		return;
 		    	}
@@ -154,6 +152,7 @@ function searchSI_Database()
 							noResultsForSearch();
 							return;
 						}
+						bSearching= false;
 
 						var seGeoLocation, se, seLatitude, seLongitude;
 						for(var i=0; i<aSEs_fromSearch.length; ++i)
@@ -188,9 +187,47 @@ function searchSI_Database()
 	});
 }
 
-
-
 function noResultsForSearch()
+{
+	$.ajax(
+	{
+	    type: 'GET',
+	    url: urlForScript('php/searchCities.php'),
+	    data: {s: searchString},
+	    dataType: 'json',
+	    complete: function(oXMLHttpRequest, textStatus)
+	    {
+	    	bSearching= false;
+		    if(oXMLHttpRequest.status === 200)
+		    {
+		    	if(strcmp(oXMLHttpRequest.responseText, '-1') === const_StringsEqual)
+		    	{
+		    		noResultsForSearchOrCities();
+		    		return;
+		    	}
+
+		    	var aCities= $.parseJSON(oXMLHttpRequest.responseText);
+				if(aCities != null)
+				{
+					aSEs_fromSearch= null;
+					show_NoListingsForSearch_Row();
+					var geoPoint= new google.maps.LatLng(aCities[0].Latitude, aCities[0].Longitude);
+					setMapToGeoPoint('#bp_map_canvas', geoPoint);
+					blp_searchComplete();
+				}
+				else
+				{
+					si_log('search.js:: searchCities:: aCities == null');
+				}
+				return;
+		    }
+		}							   
+	});
+}
+
+
+
+function noResultsForSearchOrCities()
 {
 	aSEs_fromSearch= null;
 	show_NoListingsForSearch_Row();

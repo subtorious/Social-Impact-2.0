@@ -11,6 +11,7 @@ var SE_Category, lastSE_Category,
 	timeout_ResizePage,
 	CONST_NEARBY_RADIUS= 30,
 	aSEs_Nearby= undefined,
+	aSEs_RepopMap= undefined,
     aCategoriesIn_NearbySEs= undefined,
     aSEs_MetroArea= undefined, selected_primaryArea, aSEs_Primary= undefined,
     aSEs_Online= undefined,
@@ -121,8 +122,9 @@ function setupMap_ListingsPage()
 	}
 	if(!bSearching)
 	{
-		if(b_NearbyListings)
+		if(b_NearbyListings && !bRepopulatingMap)
 		{
+			bProgrammicMapZoom= true;
 			setMapToGeoPoint('#bp_map_canvas', google_UserGeoPoint, false);
 			addMapLocationMarker('#bp_map_canvas', google_UserGeoPoint, true, null);
 		}
@@ -130,6 +132,7 @@ function setupMap_ListingsPage()
 		{
 			var metroArea_geoLocation=oPrimary_GeoLocation[selected_primaryArea];
 			var google_MetroArea_geolocation= new google.maps.LatLng(metroArea_geoLocation.latitude, metroArea_geoLocation.longitude);
+			bProgrammicMapZoom= true;
 			setMapToGeoPoint('#bp_map_canvas', google_MetroArea_geolocation, false);
 		}
 		var aSEs_toDisplay= getTheSEsToDisplay();
@@ -158,6 +161,9 @@ function resizeMapCanvas_bp()
 
 	var content= $('#businessListPage_content');
 	$(content).css('padding-bottom', CONST_CONTENT_HEIGHT_TRIM);
+
+	$('#repopulateMapButton').css('top', $('#businessListPageHeader').height());
+	$('#repopulateMapButton').css('left', ($('#bp_map_canvas').width() * 0.5) - ($('#repopulateMapButton').width() * 0.5));
 }
 
 
@@ -172,6 +178,10 @@ function getTheSEsToDisplay()
 	if(b_SearchListings)
 	{
 		return aSEs_fromSearch;
+	}
+	if(bRepopulatingMap)
+	{
+		return aSEs_RepopMap;
 	}
 	if(b_NearbyListings)
 	{
@@ -281,6 +291,7 @@ function getListingHTMLForSE(SE, listingsID, bOpenInfoWindow_forMapMarker, bMove
 			addMapLocationMarker('#bp_map_canvas', SE_google_GeoPoint, false, SE, bOpenInfoWindow_forMapMarker);
 			if(bMoveToThisLocationOnMap)
 			{
+				bProgrammicMapZoom= true;
 				setMapToGeoPoint('#bp_map_canvas', SE_google_GeoPoint, false);
 			}
 		}		

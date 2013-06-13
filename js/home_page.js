@@ -20,30 +20,10 @@ $(document).on("pagecreate", "#home_page" , function(event)
 
 $(document).on("pageinit", "#home_page" , function(event) 
 {	
-	$.getJSON('worldcities.json', function(data) 
-	{
-		data= data.results;
-		dataLength= data.length;
-
-		var nCities= 0;
-		for(var i=0; i < dataLength; ++i)
-		{
-			if(data[i].Population != " ")
-			{
-				if(parseInt(data[i].Population) > 100000)
-				{
-					++nCities;
-				}
-			}
-		}
-		console.log('json cities count= ' + nCities);
-	});
-
-
-
 	setupSearch('#home_searchInput', '.searchInputContainer');
 	getShopOnline_Categories();	
 });
+
 
 
 $(document).on('pageshow', '#home_page', function(event, ui)

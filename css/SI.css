@@ -1,3 +1,7 @@
+body
+{
+	width:100% !important;
+}
 .ui-page 
 {
 	max-width: 800px !important;
@@ -6,7 +10,7 @@
 }
 .ui-header
 {
-	/*max-width: 800px !important;*/
+	min-width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
     font-family: 'Georgia';
@@ -149,6 +153,16 @@
 	margin:0 auto 20px auto;
 	float: none;
 	padding:5px;
+}
+#repopulateMapButton
+{
+	position:absolute; 
+	z-index:99; 
+	width:inherit; 
+	height:inherit; 
+	background-color:#000; 
+	color:#fff;
+	opacity: 0.7;
 }
 /*------------------/BusinessListPage------------*/
 

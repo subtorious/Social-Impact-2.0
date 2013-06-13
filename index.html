@@ -13,7 +13,7 @@
 	<script src="js/jquery/jquery.1.8.3.min.js"></script>
 	<script src='js/Utility.js'></script>
 	<script>
-		var appVersion= 'v2.0.97';
+		var appVersion= 'v2.0.99';
 
 		var bDEBUGGING= false;
 		var bPhoneGap= true;
@@ -169,9 +169,9 @@
 
 
 <!-- _______________________________#primary_page ________________________________-->
-<div data-role="page" id="primary_page" data-theme='g'>
+<div data-role="page" id="primary_page" data-theme='g' >
 
-	<div data-role="header" data-position="fixed"> 
+	<div data-role="header" data-position="fixed" data-tap-toggle="false"> 
 		<a onclick='primary_backButton_pressed()' data-icon='arrow-l'>Back</a>
 		<div class='searchInput_header' id='searchInputHeader_primary_page'>
 		    <input  type="search" 
@@ -201,7 +201,7 @@
 <!-- _______________________________#businessListPage ________________________________-->
 <div data-role="page" id="businessListPage" data-theme='g'> 
 
-	<div data-role="header" id='businessListPageHeader' data-position="fixed">
+	<div data-role="header" id='businessListPageHeader' data-position="fixed" data-tap-toggle="false">
 		<a onclick='businessListPage_BackPressed()' data-icon='arrow-l'>Back</a>
 		<div class='searchInput_header' id='blp_searchInputHeader'>
 		    <input  type="search" 
@@ -217,6 +217,7 @@
 	<div data-role="content" id='businessListPage_content'>	
 		<ul data-role="listview" id='businessList' data-theme='d'>
 			<li id="bp_map_canvas"></li>
+			<li id='repopulateMapButton' onmouseover='this.style.cursor="pointer"' onClick='repopulateMapButtonPressed()'>Repopulate Map</li>
 			<li id='businessList_ListingsButton_li' onmouseover='this.style.cursor="pointer"' data-theme='g'>
 				<div id='blp_ListingsButton_Title'>Listings</div>
 				<img src='Images/2Lines.png' id='blp_2LinesImage'/>
@@ -235,7 +236,7 @@
 <!-- _______________________________#businessPage ________________________________-->
 <div data-role="page" id="businessPage" data-theme='g'>
 
-	<div data-role="header" id='businessPageHeader' data-position="fixed">
+	<div data-role="header" id='businessPageHeader' data-position="fixed" data-tap-toggle="false">
 		<a href='#businessListPage' data-icon='arrow-l' id='businessPage_Back'>Back</a>
 		<div class='searchInput_header' id='searchInputHeader_businessPage'>
 		    <input  type="search" 
@@ -295,7 +296,7 @@
 <!-- _______________________________#mapPage ________________________________-->
 <div data-role="page" id="mapPage" data-theme='g'> 
 
-	<div data-role="header" id='mp_header' data-position="fixed">
+	<div data-role="header" id='mp_header' data-position="fixed" data-tap-toggle="false">
 		<a href='#businessPage' data-icon='arrow-l' id='mp_back_btn'>Back</a>
 		<div class='searchInput_header' id='mp_searchInputHeader'>
 		    <input  type="search" 
@@ -318,7 +319,7 @@
 <!-- _______________________________#aboutThisAppPage ________________________________-->
 <div data-role="page" id="aboutThisAppPage" data-theme='g'> 
 
-	<div data-role="header" id='ata_header' >
+	<div data-role="header" id='ata_header' data-tap-toggle="false">
 		<a href='#home_page' data-icon='arrow-l' id='ata_back_btn'>Home</a>
 		<h3>About Us</h3>
 	</div>
@@ -348,7 +349,7 @@
 <!-- _______________________________#ackPage ________________________________-->
 <div data-role="page" id="ackPage" data-theme='g'> 
 
-	<div data-role="header" id='ack_header' >
+	<div data-role="header" id='ack_header' data-tap-toggle="false">
 		<a href='#home_page' data-icon='arrow-l' id='ack_back_btn'>Home</a>
 		<h3>About Us</h3>
 	</div>
@@ -364,9 +365,6 @@
 	</div> 
 </div>
 <!--________________________________ /ackPage __________________________-->
-
-
-
 
 </body>
 </html>
